@@ -23,6 +23,7 @@
 <!-- 		//여긴 맵의 사이즈만큼.. -->
 <!-- 		//맵안에서 엔트리의 key와 value를 뽑으면.. 정보나옴  -->
 	<%
+		//git실험
 	//**11월13일
 		String pattern="<td>%s</td>";
 		for(Entry<String,AlbasengVO> entry: SimpleFormProcessServlet.albasengs.entrySet()){
