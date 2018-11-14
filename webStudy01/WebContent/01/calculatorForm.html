@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script
+  src="https://code.jquery.com/jquery-3.3.1.min.js"
+  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+  crossorigin="anonymous"></script>
+<script type="text/javascript">
+	$(function(){	//자바스크립트는 인터프리팅언어이므로 꼭
+		var resultArea=$("#result");//한번만 실행
+		
+		$("#calForm").on("submit", function(event){//submit, callback함수()
+			event.preventDefault();//이벤트를 취소할때
+			var url = $(this).attr("action");//action은 데이터처리자를의미 그 속성값을..attr()로
+			var method = $(this).attr("method");
+			var data = $(this).serialize();//폼태크를 통해서 쿼리스트링을 만들어야함 
+			alert(data);
+			$.ajax({//문자 기반의 비동기처리할때사용! //주소(URL), 메서드, 파라미터(데이타), 내가응답데이타는 어떤형식으로 받을수있는지(html json..등의 데이타타입)가 필요..
+				url:url,			//request 라인
+				method:method,		//request라인
+				data:data,//폼태크를 통해서 쿼리스트링을 만들어야함 	//request바디
+				dataType:"json",//현재 사칙연산기 응답데이터가 일반text로 와야한다  //request header : accept결정.
+								//응답데이터의 마임(html(text/html), json(application/json), text(text/plain), xml(application/xml)..전부 문자열임)
+				success:function(resp){//처리에 성공했을때..div를 가져와야함
+					resultArea.html(resp.result);
+				},
+				error: function(resp) {//에러도 하나의 응답이니깐 resp로..
+					alert(resp.responseTxt);//서버에서 온 응답데이터 확인가능	
+				}
+			});	//하나의 객체형태로 넘기기위해 {}
+			return false;
+		});
+	});
+	
+</script>
+
+</head>
+<body>
+<!-- 사칙 연산을 위해 좌항피연산자, 연산자, 우항피연산자 입력. -->
+<form id="calForm" action="/webStudy01/calculate" method="post">
+좌항피연산자 : <input type="number" name="leftOp"/>
+연산자 
+<input type="radio" name="operator" value = "add"/>+
+<input type="radio" name="operator" value = "minus"/>-
+<input type="radio" name="operator" value = "multiply"/>*
+<input type="radio" name="operator" value = "divide"/>/
+우항피연산자 : <input type="number" name="rightOp"/>
+<input type="submit" value="=" />
+</form>
+<div id="result">
+
+
+</div>
+</body>
+</html>
