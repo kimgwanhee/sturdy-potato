@@ -1,3 +1,4 @@
+<%@page import="java.util.Map"%>
 <%@page import="kr.or.ddit.vo.AlbasengVO"%>
 <%@page import="kr.or.ddit.web.SimpleFormProcessServlet"%>
 <%@page import="java.util.Map.Entry"%>
@@ -24,9 +25,10 @@
 <!-- 		//맵안에서 엔트리의 key와 value를 뽑으면.. 정보나옴  -->
 	<%
 		//git실험
+		Map<String, AlbasengVO> alba = (Map<String, AlbasengVO>)getServletContext().getAttribute("albasengs");
 	//**11월13일
 		String pattern="<td>%s</td>";
-		for(Entry<String,AlbasengVO> entry: SimpleFormProcessServlet.albasengs.entrySet()){
+		for(Entry<String,AlbasengVO> entry: alba.entrySet()){
 			out.print("<tr>");
 			out.print(String.format(pattern, entry.getValue().getCode()));
 			out.print(String.format(pattern, entry.getValue().getName()));
