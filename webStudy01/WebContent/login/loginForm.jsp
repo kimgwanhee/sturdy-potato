@@ -34,6 +34,11 @@
 	<ul>
 		<li>
 			아이디 : <input type="text" name="mem_id" value="<%=Objects.toString(failedId, "")%>"/>		
+			<label>
+				<input type="checkbox" name="idChecked" value="idSaved"/>아이디 기억하기 
+			</label>
+<!-- 			체크하면 3개가넘어가고 3번째 넘어가는 파라미터이름이 idChecked으로 넘어갈텐데 넘어가면서 이름은 idSaved로 넘어감  -->
+<!-- 			체크를 안하면 두개의 파라미터만 넘어감// 체크안하면 파라미터 자체 형성이 안됨 -->
 		</li>
 		<li>
 			비밀번호: <input type="password" name="mem_pass" />

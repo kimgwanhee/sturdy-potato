@@ -2,6 +2,19 @@ package kr.or.ddit.vo;
 
 import java.io.Serializable;
 import java.util.Arrays;
+/**
+ * 자바빈 : Java beans 규약에 따라 재사용 가능한 객체들.
+ * (Valude Object (VO), Data Transfer Object)
+ * 1. 값을 지정할 프로퍼티
+ * 2. 캡슐화
+ * 3. 캡슐화된 프로퍼티에 접근할 인터페이스 메소드 제공(getter/setter)
+ * 	get[set]변수명의 첫문자만 대문자로 한 카멜 표기법
+ * 4. 상태 비교 방법 제공(equals)
+ * 5. 상태 확인 방법 제공(toString)
+ * 6. 직렬화 가능(전송이나 저장이 가능)
+ * 
+ */
+
 //**11월13일
 //1. 프로퍼티
 //2. 캡슐화
@@ -9,7 +22,7 @@ import java.util.Arrays;
 //4. 상태비교메서드
 //5. 상태확인tostring
 //6. 객체를 직렬화가 가능한 형태로  implements
-public class AlbasengVO implements Serializable{//implements Serializable 직렬화가 가능하도록 javabin규약에 따라 ..
+public class AlbasengVO implements Serializable{//implements Serializable 직렬화가 가능하도록 javabeans규약에 따라 ..
 	private String code;//키역할PK 
 	private String name;
 	private Integer age;

@@ -55,6 +55,6 @@ public class GugudanServlet extends HttpServlet{
 		
 		PrintWriter out = resp.getWriter();
 		out.print(html.toString());
-		out.close();
+//		out.close();
 	}
 }

@@ -29,7 +29,7 @@
 </style>
 <script type="text/javascript">
 	function eventHandler(year, month){
-		var form = document.forms[0];
+		var form = document.calForm;
 		if((year && month) || month==0){//널이나 공백 false
 			form.year.value= year;
 			form.year.value = year;
@@ -83,7 +83,8 @@
 	
 	//<a href="<%=/04/calendar.jsp?">이전달</a> <!-- 클라이언트사이드 절대경로로 표기해야함 -->//?은 get의 형태로 쿼리스트링으로 서버에..
 %>
-<form>
+<form name="calForm">
+<input type="hidden" name="command" value="calendar"/>
 <h4>
 <a href = "javascript:eventHandler(<%=beforeYear%>, <%=beforeMonth%>);">이전달</a> 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;

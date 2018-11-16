@@ -1,8 +1,8 @@
+<%@page import="java.util.Map.Entry"%>
 <%@page import="java.util.LinkedHashMap"%>
 <%@page import="java.util.Arrays"%>
 <%@page import="kr.or.ddit.vo.AlbasengVO"%>
 <%@page import="java.util.Objects"%>
-<%@page import="java.util.Map.Entry"%>
 <%@page import="java.util.Set"%>
 <%-- <%@page import="kr.or.ddit.web.SimpleFormProcessServlet"%> 이제 필요없음 써먹을수없다--%>
 <%@page import="java.util.Map"%>
@@ -20,9 +20,10 @@
 }
 
 </style>
-<%
+<%-- 아래 usebean사용으로 변수를 또쓰고있으니 모두 주석 11-15
 Map<String, String> gradeMap = (Map<String, String>) application.getAttribute("gradeMap");
 Map<String, String> licenseMap = (Map<String, String>) application.getAttribute("licenseMap");
+/*11-15주석으로 묶어서 usebean으로 바꿈
 AlbasengVO albaVO = (AlbasengVO)request.getAttribute("albaVO");//이거때문에 널포인트에러발생
 Map<String, String> errors = (Map<String, String>)request.getAttribute("errors");//누락된거잡을려고 제일마지막
 if(albaVO == null){
@@ -31,6 +32,7 @@ if(albaVO == null){
 if(errors ==null){
 	errors = new LinkedHashMap<>();
 }
+*/
 /*11월14일-9
 //**11월13일
 String name = request.getParameter("name");
@@ -41,12 +43,20 @@ String gender = request.getParameter("gender");
 String grade = request.getParameter("grade");
 String carrer = request.getParameter("carrer");
 */
-String license[] = request.getParameterValues("license");
 // 	AlbasengVO vo = new AlbasengVO();
 // 	if(request.getAttribute("vo")!=null){
 // 		vo = (AlbasengVO)request.getAttribute("vo");
 // 	}
+--%>
+<%
+String license[] = request.getParameterValues("license");
 %>
+<jsp:useBean id="gradeMap" class="java.util.HashMap" scope = "application"></jsp:useBean>
+<jsp:useBean id="licenseMap" class="java.util.LinkedHashMap" scope = "application"></jsp:useBean>
+<!-- 위 11-15일에 없앤주석역할을 함 -->
+<jsp:useBean id="albaVO" class = "kr.or.ddit.vo.AlbasengVO" scope="request"></jsp:useBean>
+<jsp:useBean id="errors" class="java.util.LinkedHashMap" scope="request"></jsp:useBean>
+
 </head>
 <body>
 <!-- 알바몬에서 알바생의 프로필을 입력받으려고 함. -->
@@ -113,7 +123,8 @@ String license[] = request.getParameterValues("license");
 				<option value="">학력</option>
 				<%
 					String pattern = "<option value='%s' %s> %s </option>";
-					for(Entry<String,String> entry :  gradeMap.entrySet()){//gradeMap를 먼저 만들어줘야함 꺼내와야함먼저그럼
+					for(Object obj :  gradeMap.entrySet()){//gradeMap를 먼저 만들어줘야함 꺼내와야함먼저그럼
+						Entry entry = (Entry) obj;
 						String selected = "";
 						if(entry.getKey().equals(albaVO.getGrade())){
 							selected = "selected";
@@ -142,7 +153,8 @@ String license[] = request.getParameterValues("license");
 						if(license!=null){
 							Arrays.sort(license);
 						}
-				for(Entry<String,String> entry :  licenseMap.entrySet()){
+				for(Object obj :  licenseMap.entrySet()){
+					Entry entry=(Entry)obj;
 						String selected = "";
 						if(license!=null && Arrays.binarySearch(license, entry.getKey())>-1){
 							selected = "selected";

@@ -26,7 +26,6 @@ public enum BrowserType {
 			}
 		}
 		return result;
-		
 	}
 
 	public String getBrowserName() {
