@@ -22,15 +22,16 @@ public enum Mime {
 	}
 
 	//메서드 생성 
-	//매개변수로 받은게 있는지없는지 검증 String type
+	//매개변수로 받은게 있는지없는지 검증 String type if
 	//매개변수랑 mime에 있는 상수랑 비교 돌아가면서 for 
 	//리턴타입= enum타입으로 가져가므로 ..
 	public static Mime MimeType(String type) {
 		Mime mime = PLAIN;
 		if(type != null && type.trim().length()==0) {
 			for(Mime m : mime.values()) {
-				if(true) {
-					
+				if(type.toUpperCase().contains(m.name())) {
+					mime = m;
+					break;
 				}
 			}
 		}
