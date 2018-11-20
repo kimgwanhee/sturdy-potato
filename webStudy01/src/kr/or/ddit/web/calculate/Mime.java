@@ -29,9 +29,11 @@ public enum Mime {
 		Mime mime = PLAIN;
 		if(type != null && type.trim().length()==0) {
 			for(Mime m : mime.values()) {
-				
+				if(true) {
+					
+				}
 			}
 		}
-		return m;
+		return mime;
 	}
 }
