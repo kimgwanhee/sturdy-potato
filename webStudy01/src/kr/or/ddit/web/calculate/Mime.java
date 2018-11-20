@@ -28,7 +28,7 @@ public enum Mime {
 	public static Mime MimeType(String type) {
 		Mime mime = PLAIN;
 		if(type != null && type.trim().length()==0) {
-			for(Mime m : ContentType.na) {
+			for(Mime m : mime.values()) {
 				
 			}
 		}
