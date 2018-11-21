@@ -28,11 +28,10 @@ public enum Mime {
 	public static Mime MimeType(String type) {
 		Mime mime = PLAIN;
 		if(type != null && type.trim().length()==0) {
-			for(Mime m : mime.values()) {
+			for(Mime m : Mime.values()) {
 				if(type.toUpperCase().contains(m.name())) {
 					mime = m;
 					break;
-					//?????
 				}
 			}
 		}

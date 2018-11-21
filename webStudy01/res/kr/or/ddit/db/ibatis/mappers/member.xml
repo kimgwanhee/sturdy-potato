@@ -3,15 +3,40 @@
 PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
 "http://ibatis.apache.org/dtd/sql-map-2.dtd">
 <sqlMap namespace="Member">
-	<select id="selectMember" parameterClass="string" resultClass="memberVO">
+	<sql id="selectMemberFrag">
 		SELECT          
-		MEM_ID,    MEM_PASS,    MEM_NAME,    MEM_REGNO1,          
-		MEM_REGNO2,    TO_CHAR(MEM_BIR,'YYYY-MM-DD') AS MEM_BIR,    MEM_ZIP,    MEM_ADD1,         
-		MEM_ADD2,    MEM_HOMETEL,    MEM_COMTEL,    MEM_HP,      
-		MEM_MAIL,    MEM_JOB,    MEM_LIKE,    MEM_MEMORIAL,      
-		 TO_CHAR(MEM_MEMORIALDAY,'YYYY-MM-DD') AS MEM_MEMORIALDAY,    MEM_MILEAGE,    MEM_DELETE  
-		FROM MEMBER                                              
+			MEM_ID,    MEM_PASS,    MEM_NAME,    MEM_REGNO1,          
+			MEM_REGNO2,    TO_CHAR(MEM_BIR,'YYYY-MM-DD') AS MEM_BIR,    MEM_ZIP,    MEM_ADD1,         
+			MEM_ADD2,    MEM_HOMETEL,    MEM_COMTEL,    MEM_HP,      
+			MEM_MAIL,    MEM_JOB,    MEM_LIKE,    MEM_MEMORIAL,      
+			 TO_CHAR(MEM_MEMORIALDAY,'YYYY-MM-DD') AS MEM_MEMORIALDAY,    MEM_MILEAGE,    MEM_DELETE  
+			FROM MEMBER              
+	</sql>
+	
+	<select id="selectMember" parameterClass="string" resultClass="memberVO">
+		<include refid="Member.selectMemberFrag"/>                     
 		WHERE MEM_ID=#MEM_ID#                                           
-		
 	</select>
+	
+	<select id="selecteMemberList" resultClass="memberVO" >
+		<include refid="Member.selectMemberFrag"/>
+		ORDER BY ROWID DESC
+	</select>
+	
+	<insert id="insertMember" parameterClass="memberVO">
+		INSERT INTO member (
+		    MEM_ID,    MEM_PASS,    MEM_NAME,    MEM_REGNO1,
+		    MEM_REGNO2,    MEM_BIR,    MEM_ZIP,    MEM_ADD1,
+		    MEM_ADD2,    MEM_HOMETEL,    MEM_COMTEL,    MEM_HP,
+		    MEM_MAIL,    MEM_JOB,    MEM_LIKE,    MEM_MEMORIAL,
+		    MEM_MEMORIALDAY,    MEM_MILEAGE
+		) VALUES (
+			#mem_id#,    #mem_pass#,    #mem_name#,    #mem_regno1#,
+		    #mem_regno2#,    TO_DATE(#mem_bir#, 'YYYY-MM-DD'),    #mem_zip#,    #mem_add1#,
+		    #mem_add2#,    #mem_hometel#,    #mem_comtel#,    #mem_hp#,
+		    #mem_mail#,    #mem_job#,    #mem_like#,    #mem_memorial#,
+		    TO_DATE(#mem_memorialday#, 'YYYY-MM-DD'),    1000
+		)
+	</insert>
+	
 </sqlMap>
