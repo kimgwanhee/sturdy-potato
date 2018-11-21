@@ -10,9 +10,8 @@ import javax.management.RuntimeErrorException;
 import kr.or.ddit.db.ConnectionFactory;
 import kr.or.ddit.vo.MemberVO;
 
-public class MemberDAOImpl_Simple implements IMemberDAO{
+public class MemberDAOImpl_Simple {
 	MemberVO member = null;
-	@Override
 	public MemberVO selectMember(String mem_id) {
 		StringBuffer sql = new StringBuffer();
 		sql.append("SELECT           ");
