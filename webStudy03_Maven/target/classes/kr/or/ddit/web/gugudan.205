@@ -1,0 +1,10 @@
+
+		<style type="text/css">
+			table{
+				border-collaps : collaps;
+				background-color:yellow;
+			}
+		</style>
+		<table>
+			@gugudan
+		</table>

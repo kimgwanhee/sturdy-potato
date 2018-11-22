@@ -1,0 +1,142 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+<h4> 회원 가입 </h4>
+<form action="<%= request.getContextPath()%>/member/memberInsert.jsp" method = "post">
+//특수문자같은것 인코딩 필요
+
+//
+
+<table>
+	<tr>
+		<th>회원아이디</th>
+		<td>
+			<input type="text" name="mem_id" value=""/>
+		</td>
+	</tr>
+	
+	<tr>
+		<th>비밀번호</th>
+		<td>
+			<input type="text" name="mem_pass" value=""/>
+		</td>
+	</tr>
+	
+	<tr>
+		<th>이름</th>
+		<td>
+			<input type="text" name="mem_name" value=""/>
+		</td>
+	</tr>
+	
+	<tr>
+		<th>주민번호</th>
+		<td>
+			<input type="text" name="mem_regno1" value=""/> - <input type="text" name="mem_regno2" value=""/>
+		</td>
+	</tr>
+	
+	<tr>
+		<th>생년월일</th>
+		<td>
+			<input type="date" name="mem_bir" value=""/>
+		</td>
+	</tr>
+	
+	<tr>
+		<th>우편번호</th>
+		<td>
+			<input type="text" name="mem_zip" value=""/>
+		</td>
+	</tr>
+	
+	<tr>
+		<th>주소1</th>
+		
+		<td>
+			<input type="text" name="mem_add1" value=""/>
+		</td>
+	</tr>
+	
+	<tr>
+		<th>주소2</th>
+		<td>
+			<input type="text" name="mem_add2" value=""/>
+		</td>
+	</tr>
+	
+	<tr>
+		<th>집번호</th>
+		<td>
+			<input type="text" name="mem_hometel" value=""/>
+		</td>
+	</tr>
+	
+	<tr>
+		<th>회사번호</th>
+		<td>
+			<input type="text" name="mem_comtel" value=""/>
+		</td>
+	</tr>
+	
+	<tr>
+		<th>폰번호</th>
+		<td>
+			<input type="text" name="mem_hp" value=""/>
+		</td>
+	</tr>
+	
+	<tr>
+		<th>이메일</th>
+		<td>
+			<input type="text" name="mem_mail" value=""/>
+		</td>
+	</tr>
+	
+	<tr>
+		<th>직업</th>
+		<td>
+			<input type="text" name="mem_job" value=""/>
+		</td>
+	</tr>
+	
+	<tr>
+		<th>취미</th>
+		<td>
+			<input type="text" name="mem_like" value=""/>
+		</td>
+	</tr>
+	
+	<tr>
+		<th>기념일</th>
+		<td>
+			<input type="text" name="mem_memorial" value=""/>
+		</td>
+	</tr>
+	
+	<tr>
+		<th>기념날짜</th>
+		<td>
+			<input type="text" name="mem_memorialday" value=""/>
+		</td>
+	</tr>
+	
+	
+	
+	<tr>
+		<td colspan="2">
+			<input type="submit" value="등록"/>
+			<input type="reset" value="취소"/>
+		</td>
+	</tr>
+</table>
+
+</form>
+</body>
+</html>

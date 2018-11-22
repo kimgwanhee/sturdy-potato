@@ -1,0 +1,18 @@
+<html>
+	<head>
+		<script type= "text/javascript">
+			function changeHandler(){
+				
+			}
+		</script>
+		
+	</head>
+	<body>
+		<form action = "image.do" method ="get">
+			<select name="selname" onchange = "changeHandler();">
+				@img
+			</select>
+			<!-- <input type="submit" value="전송"/> -->
+		</form>
+	</body>
+</html>
