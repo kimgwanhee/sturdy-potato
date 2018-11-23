@@ -14,10 +14,10 @@ import org.apache.commons.lang3.StringUtils;
 import kr.or.ddit.ServiceResult;
 import kr.or.ddit.member.service.IMemberService;
 import kr.or.ddit.member.service.MemberServiceImpl;
+import kr.or.ddit.mvc.ICommandHandler;
 import kr.or.ddit.vo.MemberVO;
 
-@WebServlet("/member/memberDelete.do")
-public class MemberDeleteServlet extends HttpServlet{
+public class MemberDeleteController implements ICommandHandler{
 	//post
 	//탈퇴를 시키려면 필요한데이타 id와 pass 대한 검증 
 	//둘중 하나라도 누락되면 bad request발생
@@ -27,7 +27,7 @@ public class MemberDeleteServlet extends HttpServlet{
 	//그전에 memberservice완성..
 	
 	@Override
-	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+	public String Process(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		req.setCharacterEncoding("UTF-8");
 		
 		String id = req.getParameter("mem_id");
@@ -35,7 +35,7 @@ public class MemberDeleteServlet extends HttpServlet{
 		
 		if(StringUtils.isBlank(id)||StringUtils.isBlank(pass)) {
 			resp.sendError(HttpServletResponse.SC_BAD_REQUEST);
-			return;
+			return null;
 		}
 		
 		// 3번 검증 의존관계형성
@@ -56,34 +56,26 @@ public class MemberDeleteServlet extends HttpServlet{
 		case INVALIDPASSWORD:
 			//6번 뷰선택
 //			goPage = "/member/memberView.do?who="+id;
-			goPage = "/member/mypage.do";
+			goPage = "redirect:/member/mypage.do";
 			message = "비밀번호 틀림";
-			redirect=true;
 			break;
 			
 		case FAILED:
-			goPage = "/member/mypage.do";
+			goPage = "redirect:/member/mypage.do";
 			message = "서버 오류로 인한 실패";
-			redirect=true;
 			break;
 						
 		case OK:
 //			goPage = "/member/memberView.do?who="+id;
-			goPage = "/common/message.jsp";
-			message = "탈퇴약관 : 일주일이내에서 즐대 !! 같은 아이디로 재가입 불가 ";
+			goPage = "redirect:/common/message.jsp";
+			message = "탈퇴약관 : 일주일이내에서 절대 !! 같은 아이디로 재가입 불가 ";
 			req.getSession().setAttribute("goLink", "/");//세션을 만료시키기위해서 아래에
 			req.getSession().setAttribute("isRemoved", new Boolean(true));
 //			req.getSession().invalidate();//이제 세션만료 d이거 메시지 jsp로 가기
-			redirect=true;
 			break;
 		}
 		req.getSession().setAttribute("message", message);//열어서 본다음 바로 삭제해야함 -> 그 구조를 플래쉬
 		
-		if(redirect) {
-			resp.sendRedirect(req.getContextPath()+goPage);
-		}else {
-			RequestDispatcher rd = req.getRequestDispatcher(goPage);
-			rd.forward(req, resp);
-		}
+		return goPage;
 	}
 }

@@ -18,10 +18,22 @@ PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
 		<include refid="Member.selectMemberFrag"/>                     
 		WHERE MEM_ID=#MEM_ID#                                           
 	</select>
+	 
+	<select id="selectTotalRecord" resultClass="Long">
+		SELECT COUNT(*)
+		FROM MEMBER
+	</select>
 	
-	<select id="selecteMemberList" resultClass="memberVO" >
-		<include refid="Member.selectMemberFrag"/>
-		ORDER BY ROWID DESC
+	<select id="selecteMemberList" resultClass="memberVO" parameterClass="pagingVO">
+		SELECT B.*
+		FROM(
+				SELECT ROWNUM RNUM, A.*
+				FROM(
+						<include refid="Member.selectMemberFrag"/>
+						ORDER BY ROWID DESC ) A ) B
+		<![CDATA[
+		WHERE RNUM >= #startRow# AND RNUM <= #endRow#
+		]]> 
 	</select>
 	
 	<insert id="insertMember" parameterClass="memberVO">

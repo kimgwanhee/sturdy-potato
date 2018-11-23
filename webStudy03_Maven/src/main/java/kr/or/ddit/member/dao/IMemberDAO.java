@@ -3,6 +3,7 @@ package kr.or.ddit.member.dao;
 import java.util.List;
 
 import kr.or.ddit.vo.MemberVO;
+import kr.or.ddit.vo.PagingInfoVO;
 /**
  * 
  * @author KGH
@@ -27,11 +28,13 @@ public interface IMemberDAO {
 	 */
 	public int insertMember(MemberVO member);	//mybatis는 아아디를 기준으로 mapper가 만들어진다
 	
+	public long selectTotalRecord(PagingInfoVO pagingVO);
 	/**
 	 * 회원 목록 조회
+	 * @param pagingVO TODO
 	 * @return 존재하지 않는다면 , size()==0
 	 */
-	public List<MemberVO> selecteMemberList();
+	public List<MemberVO> selecteMemberList(PagingInfoVO pagingVO);
 	/**
 	 * 회원정보 상세 조회
 	 * @param mem_id 조회할 회원의 아이디

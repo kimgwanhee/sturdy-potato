@@ -7,6 +7,7 @@ import com.ibatis.sqlmap.client.SqlMapClient;
 
 import kr.or.ddit.db.ibatis.CustomSqlMapClientBuilder;
 import kr.or.ddit.vo.MemberVO;
+import kr.or.ddit.vo.PagingInfoVO;
 
 public class MemberDAOImpl implements IMemberDAO{
 
@@ -30,9 +31,9 @@ public class MemberDAOImpl implements IMemberDAO{
 			}
 	}
 	@Override
-	public List<MemberVO> selecteMemberList() {
+	public List<MemberVO> selecteMemberList(PagingInfoVO pagingVO) {
 		try {
-			return sqlMapClient.queryForList("Member.selecteMemberList");
+			return sqlMapClient.queryForList("Member.selecteMemberList", pagingVO);
 		}catch (SQLException e) {
 			throw new RuntimeException(e);
 		}
@@ -51,6 +52,14 @@ public class MemberDAOImpl implements IMemberDAO{
 			return sqlMapClient.delete("Member.deleteMember", mem_id);
 		}catch (SQLException e) {	//내가 만든 쿼리나 오라클디비 예외들잡는것 
 			throw new RuntimeException(e);
+		}
+	}
+	@Override
+	public long selectTotalRecord(PagingInfoVO pagingVO) {
+		try {
+			return (Long) sqlMapClient.queryForObject("Member.selectTotalRecord");
+		}catch (SQLException e) {
+			throw new RuntimeException();
 		}
 	}
 }

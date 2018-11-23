@@ -7,6 +7,7 @@ import kr.or.ddit.ServiceResult;
 import kr.or.ddit.member.dao.IMemberDAO;
 import kr.or.ddit.member.dao.MemberDAOImpl;
 import kr.or.ddit.vo.MemberVO;
+import kr.or.ddit.vo.PagingInfoVO;
 
 public class MemberServiceImpl implements IMemberService {
 	IMemberDAO memberDAO = new MemberDAOImpl();//실행코드의 캡슐화 !!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -20,7 +21,7 @@ public class MemberServiceImpl implements IMemberService {
 				result=ServiceResult.OK;
 			}else {
 				result=ServiceResult.FAILED;
-			}
+			} 
 		}else {
 			result = ServiceResult.PKDUPLICATED;
 		}
@@ -28,8 +29,8 @@ public class MemberServiceImpl implements IMemberService {
 	}
 
 	@Override
-	public List<MemberVO> retrieveMemberList() {
-		List<MemberVO> memberList = memberDAO.selecteMemberList();
+	public List<MemberVO> retrieveMemberList(PagingInfoVO pagingVO) {
+		List<MemberVO> memberList = memberDAO.selecteMemberList(pagingVO);
 		return memberList;
 	}
 
@@ -91,4 +92,11 @@ public class MemberServiceImpl implements IMemberService {
 			}
 			return result;
 		}
+
+
+
+	@Override
+	public long retrieveMemberCount(PagingInfoVO pagingVO) {
+		return memberDAO.selectTotalRecord(pagingVO);//전체 리코드가 다시 리턴될것
+	}
 }

@@ -7,10 +7,7 @@ import java.text.SimpleDateFormat;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -21,24 +18,35 @@ import kr.or.ddit.CommonException;
 import kr.or.ddit.ServiceResult;
 import kr.or.ddit.member.service.IMemberService;
 import kr.or.ddit.member.service.MemberServiceImpl;
+import kr.or.ddit.mvc.ICommandHandler;
 import kr.or.ddit.vo.MemberVO;
 
-@WebServlet("/member/memberInsert.do")//URL X -> URI
-public class MemberInsertServlet extends HttpServlet {
-	@Override
-	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		String view = "/WEB-INF/views/member/memberForm.jsp";//6번..
-		RequestDispatcher rd = req.getRequestDispatcher(view);
-		rd.forward(req, resp);
-	}
+public class MemberInsertController implements ICommandHandler {//여긴 하나의 주소로 두개의 메서드 문제가됨..-> 
 	
 	@Override
-	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+	public String Process(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
+		String method = req.getMethod();
+		String view = null;
+		if("get".equalsIgnoreCase(method)) {//메소드가 대문자로올지 소문자로올지 몰라서..equalsIgnoreCase
+			view = doGet(req, resp);
+		}else if("post".equalsIgnoreCase(method)) {
+			view = doPost(req, resp);
+		}else {//여기에 걸리면 우리가 처리할수있는 메소드 x -> 잘못된메서드 요청한 클라이언트잘못 400번대에러
+			resp.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
+		}
+		return view;
+	}
+	
+	public String doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		String view = "member/memberForm";//6번..
+		return view;
+	}
+	
+	protected String doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		//요청분석
 		//검증
 		//로직과의 의존관계형성
 		//MemberInsert.jsp에서 가져옴
-		req.setCharacterEncoding("UTF-8");
 		MemberVO member = new MemberVO();//커맨더 오브젝트
 		req.setAttribute("member", member);
 		
@@ -54,7 +62,6 @@ public class MemberInsertServlet extends HttpServlet {
 		
 	//검증
 		String goPage = null;
-		boolean redirect = false;
 		String message= null;
 		Map<String, String> errors = new LinkedHashMap<>();
 		req.setAttribute("errors", errors);// 이 request안에있는값이 바뀌었다?
@@ -67,30 +74,22 @@ public class MemberInsertServlet extends HttpServlet {
 			ServiceResult result = service.registMember(member);
 			switch(result){
 			case PKDUPLICATED : 
-				goPage = "/WEB-INF/views/member/memberForm.jsp";
+				goPage = "member/memberForm";
 				message = "아이디 중복, 바꾸셈.";
 				break;
 			case FAILED : 
-				goPage = "/WEB-INF/views/member/memberForm.jsp";
+				goPage = "member/memberForm";
 				message = "서버 오류로 인한 실패, 잠시뒤 다시하셈.";
 				break;
 			case OK : 
-				goPage="/member/memberList.do";
-				redirect = true;
+				goPage="redirect:/member/memberList.do";
 				break;
 			}
 			req.setAttribute("message", message);
 		}else{
-			goPage = "/WEB-INF/views/member/memberForm.jsp";
+			goPage = "member/memberForm";
 		}
-		
-		if(redirect){
-			resp.sendRedirect(req.getContextPath()+goPage);	
-		}else{
-			RequestDispatcher rd = req.getRequestDispatcher(goPage);
-			rd.forward(req, resp);
-		}
-	
+		return goPage;
 	}
 	
 	private boolean validate(MemberVO member, Map<String, String> errors){//콜바이레퍼런스..?머죠
@@ -116,4 +115,5 @@ public class MemberInsertServlet extends HttpServlet {
 		}
 		return valid;
 	}
+
 }

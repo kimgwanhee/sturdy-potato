@@ -4,6 +4,7 @@
 <properties resource ="kr/or/ddit/db/dbInfo.properties"/>
 <settings useStatementNamespaces="true"></settings>
 	<typeAlias alias="memberVO" type="kr.or.ddit.vo.MemberVO"/>
+	<typeAlias alias="pagingVO" type="kr.or.ddit.vo.PagingInfoVO"/>
 	<transactionManager type = "JDBC">
 		<dataSource type = "DBCP">
 			<property name="driverClassName" value="${driverClassName}"/>

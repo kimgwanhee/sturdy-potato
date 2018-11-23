@@ -4,6 +4,7 @@ import java.util.List;
 
 import kr.or.ddit.ServiceResult;
 import kr.or.ddit.vo.MemberVO;
+import kr.or.ddit.vo.PagingInfoVO;
 
 /**
  * 
@@ -29,11 +30,14 @@ public interface IMemberService {
 	 */
 	public ServiceResult registMember(MemberVO member);
 	
+	public long retrieveMemberCount(PagingInfoVO pagingVO);
+	
 	/**
 	 * 회원 목록 조회
+	 * @param pagingVO TODO
 	 * @return 존재하지 않을 때, size()==0
 	 */
-	public List<MemberVO> retrieveMemberList();
+	public List<MemberVO> retrieveMemberList(PagingInfoVO pagingVO);
 	
 	/**
 	 * 회원 정보 상세 조회

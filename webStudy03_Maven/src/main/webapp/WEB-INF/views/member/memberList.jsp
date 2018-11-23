@@ -1,3 +1,4 @@
+<%@page import="kr.or.ddit.vo.PagingInfoVO"%>
 <%@page import="kr.or.ddit.vo.MemberVO"%>
 <%@page import="java.util.List"%>
 <%@page import="kr.or.ddit.member.service.MemberServiceImpl"%>
@@ -9,7 +10,9 @@
 // 	List<MemberVO> memberList = service.retrieveMemberList();
 //이제 서블릿에 있으므로 스코프부르는것부터 시작
 
-List<MemberVO> memberList = (List<MemberVO>)request.getAttribute("memberList");
+	PagingInfoVO pagingVO = (PagingInfoVO)request.getAttribute("pagingVO");
+	List<MemberVO> memberList = pagingVO.getDataList();
+	
 %>
 <!DOCTYPE html>
 <html>
@@ -58,6 +61,15 @@ List<MemberVO> memberList = (List<MemberVO>)request.getAttribute("memberList");
 		%>
 	
 	</tbody>
+	<tfoot>
+		<tr>
+			<td colspan="6">
+				<nav aria-label="Page navigation example">
+				 	<%= pagingVO.getPagingHTML() %>
+				</nav>
+			</td>
+		</tr>
+	</tfoot>
 </table>
 </body>
 </html>

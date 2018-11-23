@@ -1,4 +1,4 @@
-package memberUpdate;
+package kr.or.ddit.member.controller;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -22,10 +22,10 @@ import kr.or.ddit.CommonException;
 import kr.or.ddit.ServiceResult;
 import kr.or.ddit.member.service.IMemberService;
 import kr.or.ddit.member.service.MemberServiceImpl;
+import kr.or.ddit.mvc.ICommandHandler;
 import kr.or.ddit.vo.MemberVO;
 
-@WebServlet("/member/memberUpdate.do")
-public class MemberUpdateServlet extends HttpServlet {
+public class MemberUpdateController implements ICommandHandler {
 	/*
 	 * //1. 요청을 받으려면 등록, 매핑하기
 	 * 
@@ -45,10 +45,10 @@ public class MemberUpdateServlet extends HttpServlet {
 	 * req.getRequestDispatcher(view); rd.forward(req, resp);
 	 */
 	@Override
-	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+	public String Process(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		// 8가지동작
 		// POST에서 제일 먼저 특수문자 처리
-		req.setCharacterEncoding("UTF-8");
+//		req.setCharacterEncoding("UTF-8");//이제 요청을 제일먼저 갖고있는 프론트로 이동
 
 		// MEMBER 담을 객체 생성
 		MemberVO member = new MemberVO();
@@ -64,7 +64,6 @@ public class MemberUpdateServlet extends HttpServlet {
 
 		// 3번 검증 의존관계형성
 		String goPage = null;
-		boolean redirect = false;
 		String message = null;
 		Map<String, String> errors = new LinkedHashMap<>();
 		req.setAttribute("errors", errors);
@@ -78,32 +77,25 @@ public class MemberUpdateServlet extends HttpServlet {
 			switch (result) {//검증엔 성공
 			case INVALIDPASSWORD:
 				//6번 뷰선택
-				goPage = "/WEB-INF/views/member/memberView.jsp";
+				goPage = "member/memberView";
 				message = "비밀번호 틀림";
 				break;
 				
 			case FAILED:
-				goPage = "/WEB-INF/views/member/memberView.jsp";
+				goPage = "member/memberView";
 				message = "서버 오류로 인한 실패";
 				break;
 							
 			case OK:
 //				goPage = "/member/memberView.do?who="+member.getMem_id();
-				goPage = "/member/mypage.do";
-				redirect=true;
+				goPage = "redirect:/member/mypage.do";//redirect:라는 규칙성을 줌
 				break;
 			}
 			req.setAttribute("message", message);
 		}else {//검증실패
-			goPage="/WEB-INF/views/member/memberView.jsp";
+			goPage="member/memberView";
 		}
-		
-		if(redirect) {
-			resp.sendRedirect(req.getContextPath()+goPage);
-		}else {
-			RequestDispatcher rd = req.getRequestDispatcher(goPage);
-			rd.forward(req, resp);
-		}
+		return goPage;
 	}
 
 	private boolean validate(MemberVO member, Map<String, String> errors) {// 콜바이레퍼런스..?머죠
