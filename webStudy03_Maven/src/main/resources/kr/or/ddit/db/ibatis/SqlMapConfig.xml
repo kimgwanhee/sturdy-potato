@@ -5,6 +5,9 @@
 <settings useStatementNamespaces="true"></settings>
 	<typeAlias alias="memberVO" type="kr.or.ddit.vo.MemberVO"/>
 	<typeAlias alias="pagingVO" type="kr.or.ddit.vo.PagingInfoVO"/>
+	<typeAlias alias="buyerVO" type="kr.or.ddit.vo.BuyerVO"/>
+	
+	
 	<transactionManager type = "JDBC">
 		<dataSource type = "DBCP">
 			<property name="driverClassName" value="${driverClassName}"/>
@@ -19,4 +22,5 @@
 	</transactionManager>
 	
 	<sqlMap resource="kr/or/ddit/db/ibatis/mappers/member.xml"/>
+	<sqlMap resource="kr/or/ddit/db/ibatis/mappers/buyer.xml"/>
 </sqlMapConfig>

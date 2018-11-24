@@ -41,6 +41,8 @@ public class FrontController extends HttpServlet {
 			try {
 				handlerClz = (Class<ICommandHandler>) Class.forName(qualifiedName.trim());
 				ICommandHandler handler = handlerClz.newInstance();
+				
+				
 				handlerMap.put(uri.trim(), handler);
 				logger.info(" {}에 대한 핸들러 {} 등록", uri, qualifiedName); //적어도 info와 동일하거나 더 낮아야 메세지가 들어옴 {}<메세지아규먼트
 				
@@ -65,6 +67,7 @@ public class FrontController extends HttpServlet {
 		uri = uri.substring(cpLength).split(";")[0];
 		System.out.println(uri);///member/memberList.do필요한 주소만 짤림
 		ICommandHandler handler = handlerMap.get(uri);
+		
 		
 		/*
 	.	ICommandHandler handler = null;//이제 부모 //다형성
@@ -92,7 +95,7 @@ public class FrontController extends HttpServlet {
 		//여기선 7. 뷰선택.
 //		8. 뷰로 이동
 		
-		String view = handler.Process(req,resp);
+		String view = handler.Process(req,resp);	
 		String prefix = "/WEB-INF/views/";
 		String suffix = ".jsp";
 		if(view!=null) {

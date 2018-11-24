@@ -11,7 +11,7 @@ PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
 			MEM_MAIL,    MEM_JOB,    MEM_LIKE,    MEM_MEMORIAL,      
 			 TO_CHAR(MEM_MEMORIALDAY,'YYYY-MM-DD') AS MEM_MEMORIALDAY,    MEM_MILEAGE,    MEM_DELETE  
 			 ,MEM_AUTH
-			FROM MEMBER              
+			FROM MEMBER
 	</sql>
 	
 	<select id="selectMember" parameterClass="string" resultClass="memberVO">

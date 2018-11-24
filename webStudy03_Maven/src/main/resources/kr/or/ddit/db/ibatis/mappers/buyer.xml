@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap
+PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="Buyer">
+	<sql id="selectBuyerFrag">
+	SELECT
+			buyer_id, buyer_name, buyer_lgu, buyer_bank,			
+			buyer_bankno, buyer_bankname, buyer_zip, buyer_add1,
+			buyer_add2,	buyer_comtel, buyer_fax, buyer_mail,
+			buyer_charger, buyer_telext
+		FROM buyer
+	</sql>
+
+	<select id="selectBuyerList" resultClass="buyerVO">
+		<include refid="Buyer.selectBuyerFrag"/>
+	</select>
+	
+	<select id="selectBuyer" resultClass="buyerVO" parameterClass="String">
+		<include refid="Buyer.selectBuyerFrag"/>
+		WHERE BUYER_ID = #buyer_id#
+	</select>
+	
+	<insert id="insertBuyer" parameterClass="BuyerVO">
+		INSERT INTO buyer (
+		    buyer_id, buyer_name, buyer_lgu, buyer_bank,
+		    buyer_bankno, buyer_bankname, buyer_zip, buyer_add1,
+		    buyer_add2,  buyer_comtel, buyer_fax, buyer_mail,
+		    buyer_charger
+		) VALUES (
+			#buyer_id#, #buyer_name#, #buyer_lgu#, #buyer_bank#, #buyer_bankno#, #buyer_bankname#, #buyer_zip#, 
+			#buyer_add1#, #buyer_add2#, #buyer_comtel#, #buyer_fax#, #buyer_mail#, #buyer_charger#
+		);
+	</insert>
+	
+</sqlMap>
