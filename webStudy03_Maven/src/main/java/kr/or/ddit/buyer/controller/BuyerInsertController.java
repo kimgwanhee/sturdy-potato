@@ -1,7 +1,6 @@
 package kr.or.ddit.buyer.controller;
 
 import java.io.IOException;
-
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -19,9 +18,8 @@ public class BuyerInsertController implements ICommandHandler{
 			view = doPost(req, resp);
 		}
 		return view;
-		
 	}
-	
+
 	private String doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException{
 		return "buyer/buyerForm";//서버사이드
 	}
