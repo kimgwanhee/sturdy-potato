@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="Prod">
+	<sql id="searchFrag">
+		<dynamic prepend=" WHERE ">
+			<isNotNull property="searchVO">
+				<isNotEmpty property="searchVO.prod_lgu" prepend="AND">
+					PROD_LGU=#searchVO.prod_lgu# 
+				</isNotEmpty>
+				<isNotEmpty property="searchVO.prod_buyer" prepend="AND">
+					PROD_BUYER=#searchVO.prod_buyer#  
+				</isNotEmpty>
+				<isNotEmpty property="searchVO.prod_name" prepend="AND">
+					PROD_NAME LIKE '%'||#searchVO.prod_name#||'%'
+				</isNotEmpty>
+			</isNotNull>
+		</dynamic>	
+	</sql>
+	
+	<select id="selectTotalRecord" resultClass="Long" parameterClass="pagingVO">
+		SELECT COUNT(*) FROM PROD
+		<include refid="Prod.searchFrag"/>
+	</select>
+	
+	<select id="selectProdList" parameterClass="pagingVO" resultClass="prodVO">
+		select b.*
+          from( select rownum as rnum, prod_id, prod_name, prod_price, prod_outline, prod_mileage, lprod_nm, buyer_name
+                  from prod inner join lprod on (prod_lgu = lprod_gu)
+                           inner join buyer on (prod_buyer = buyer_id)
+                  <include refid="Prod.searchFrag"/>         
+               ) b    
+           where rnum between #startRow# and #endRow#
+	</select>
+	
+	<resultMap class="buyerVO" id="buyerMap">
+		<result property="buyer_name" column="BUYER_NAME"></result>
+		<result property="buyer_add1" column="BUYER_ADD1"></result>
+		<result property="buyer_charger" column="BUYER_CHARGER"></result>
+		<result property="buyer_comtel" column="BUYER_COMTEL"></result>
+	</resultMap>
+	
+	<resultMap class="memberVO" id="memberMap">
+		<result property="mem_id" column="MEM_ID"/>
+		<result property="mem_name" column="MEM_NAME"/>
+		<result property="mem_add1" column="MEM_ADD1"/>
+		<result property="mem_add2" column="MEM_ADD2"/>
+		<result property="mem_hp" column="MEM_HP"/>
+		<result property="mem_mail" column="MEM_MAIL"/>
+	</resultMap>
+		
+	<resultMap class="prodVO" id="prodMap" groupBy="prod_id">
+		<result property="prod_id" column="PROD_ID"/>
+		<result property="prod_name" column="PROD_NAME"/>
+		<result property="prod_lgu" column="PROD_LGU"/>
+		<result property="lprod_nm" column="LPROD_NM"/>
+		<result property="prod_buyer" column="PROD_BUYER"/>
+		<result property="prod_cost" column="PROD_COST"/>
+		<result property="prod_price" column="PROD_PRICE"/>
+		<result property="prod_sale" column="PROD_SALE"/>
+		<result property="prod_outline" column="PROD_OUTLINE"/>
+		<result property="prod_detail" column="PROD_DETAIL"/>
+		<result property="prod_img" column="PROD_IMG"/>
+		<result property="prod_totalstock" column="PROD_TOTALSTOCK"/>
+		<result property="prod_insdate" column="PROD_INSDATE"/>
+		<result property="prod_properstock" column="PROD_PROPERSTOCK"/>
+		<result property="prod_size" column="PROD_SIZE"/>
+		<result property="prod_color" column="PROD_COLOR"/>
+		<result property="prod_delivery" column="PROD_DELIVERY"/>
+		<result property="prod_unit" column="PROD_UNIT"/>
+		<result property="prod_qtyin" column="PROD_QTYIN"/>
+		<result property="prod_qtysale" column="PROD_QTYSALE"/>
+		<result property="prod_mileage" column="PROD_MILEAGE"/>
+		
+		<result property="buyer" resultMap="Prod.buyerMap" />
+		<result property="customers" resultMap="Prod.memberMap" javaType="java.util.List"/>
+	</resultMap>
+	
+	<select id="selectProd" parameterClass="string" resultMap="Prod.prodMap">
+		SELECT 
+		    PROD_ID,PROD_NAME,PROD_LGU,PROD_BUYER, PROD_COST,
+		    PROD_PRICE,PROD_SALE, PROD_OUTLINE, PROD_DETAIL,PROD_IMG,
+		    PROD_TOTALSTOCK,TO_CHAR(PROD_INSDATE, 'YYYY-MM-DD') PROD_INSDATE,PROD_PROPERSTOCK,
+		    PROD_SIZE,PROD_COLOR, PROD_DELIVERY, PROD_UNIT, PROD_QTYIN, PROD_QTYSALE, PROD_MILEAGE,
+		    LPROD_NM, BUYER_NAME, BUYER_ADD1, BUYER_CHARGER, BUYER_COMTEL ,
+		    MEM_ID, MEM_NAME, MEM_ADD1, MEM_ADD2, MEM_HP, MEM_MAIL
+		FROM PROD INNER JOIN LPROD ON (PROD_LGU = LPROD_GU) 
+		          INNER JOIN BUYER ON (PROD_BUYER = BUYER_ID)
+		          LEFT OUTER JOIN CART ON(PROD_ID = CART_PROD) 
+		          LEFT OUTER JOIN MEMBER ON(CART_MEMBER = MEM_ID) 
+		WHERE PROD_ID = #prod_id#
+	</select>
+</sqlMap>

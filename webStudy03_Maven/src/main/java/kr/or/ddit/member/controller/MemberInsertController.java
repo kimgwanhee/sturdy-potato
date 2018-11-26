@@ -67,7 +67,6 @@ public class MemberInsertController implements ICommandHandler {// 여긴 하나
 		Map<String, String> errors = new LinkedHashMap<>();
 		req.setAttribute("errors", errors);// 이 request안에있는값이 바뀌었다?
 		boolean valid = validate(member, errors);
-		System.err.println(errors.size());
 		if (valid) {
 			// 의존관계형성
 			IMemberService service = new MemberServiceImpl();

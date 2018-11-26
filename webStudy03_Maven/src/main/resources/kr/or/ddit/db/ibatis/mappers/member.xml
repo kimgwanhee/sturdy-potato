@@ -14,14 +14,33 @@ PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
 			FROM MEMBER
 	</sql>
 	
+	<sql id="searchFrag">
+		<dynamic prepend=" WHERE ">
+			<isNotEmpty property="searchWord">
+				<isEqual property="searchType" compareValue="name">
+					MEM_NAME LIKE '%' || #searchWord# || '%'
+				</isEqual>
+				<isEqual property="searchType" compareValue="address">
+					MEM_ADD1 LIKE '%' || #searchWord# || '%'
+				</isEqual>
+				<isEqual property="searchType" compareValue="all">
+					MEM_NAME LIKE '%' || #searchWord# || '%'
+				 	 OR
+					MEM_ADD1 LIKE '%' || #searchWord# || '%'
+				</isEqual>
+			</isNotEmpty>
+		</dynamic>
+	</sql>
+	
 	<select id="selectMember" parameterClass="string" resultClass="memberVO">
 		<include refid="Member.selectMemberFrag"/>                     
 		WHERE MEM_ID=#MEM_ID#                                           
 	</select>
 	 
-	<select id="selectTotalRecord" resultClass="Long">
+	<select id="selectTotalRecord" resultClass="Long" parameterClass="pagingVO">
 		SELECT COUNT(*)
 		FROM MEMBER
+		<include refid="Member.searchFrag"/>
 	</select>
 	
 	<select id="selecteMemberList" resultClass="memberVO" parameterClass="pagingVO">
@@ -30,6 +49,7 @@ PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
 				SELECT ROWNUM RNUM, A.*
 				FROM(
 						<include refid="Member.selectMemberFrag"/>
+						<include refid="Member.searchFrag"/>
 						ORDER BY ROWID DESC ) A ) B
 		<![CDATA[
 		WHERE RNUM >= #startRow# AND RNUM <= #endRow#

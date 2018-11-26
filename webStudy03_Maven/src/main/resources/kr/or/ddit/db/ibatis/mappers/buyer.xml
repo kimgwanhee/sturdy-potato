@@ -30,7 +30,13 @@ PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
 		) VALUES (
 			#buyer_id#, #buyer_name#, #buyer_lgu#, #buyer_bank#, #buyer_bankno#, #buyer_bankname#, #buyer_zip#, 
 			#buyer_add1#, #buyer_add2#, #buyer_comtel#, #buyer_fax#, #buyer_mail#, #buyer_charger#
-		);
+		)
 	</insert>
+	
+	<select id="countBuyer" parameterClass="string" resultClass="Long">
+		select count(*)
+		from BUYER
+		where BUYER_LGU= #buyer_lgu#
+	</select>
 	
 </sqlMap>

@@ -57,7 +57,7 @@ public class MemberDAOImpl implements IMemberDAO{
 	@Override
 	public long selectTotalRecord(PagingInfoVO pagingVO) {
 		try {
-			return (Long) sqlMapClient.queryForObject("Member.selectTotalRecord");
+			return (Long) sqlMapClient.queryForObject("Member.selectTotalRecord", pagingVO);
 		}catch (SQLException e) {
 			throw new RuntimeException();
 		}

@@ -8,19 +8,19 @@ import lombok.NoArgsConstructor;
  * 
  * 	totalRecord와 currentPage를 결정하면, 나머지 속성들이 연산됨.
  * 	setToalRecord/setCurrentPage 호출 필요.
+ * @param <T>
  * 
  * 
  */
 @Data
 @NoArgsConstructor
-public class PagingInfoVO {
-	
-	
+public class PagingInfoVO<T> {
 	public PagingInfoVO(int screenSize, int blockSize) {
 		super();
 		this.screenSize = screenSize;
 		this.blockSize = blockSize;
 	}
+	
 	private long totalRecord;
 	private int screenSize = 10;
 	private int blockSize = 5;
@@ -30,7 +30,13 @@ public class PagingInfoVO {
 	private long endPage;
 	private long startRow;
 	private long endRow;
-	private List<MemberVO> dataList;
+//	private List<MemberVO> dataList;//고정이 되있다면 거래처목록, 상품목록에 사용하는 페이징vo를 각각 만들어야함.. -> 제너릭타입이라는 문법을 적용할거임
+	private List<T> dataList;//T-타입변수라고 부름 
+	//제너릭타입-> 구체적인 타입이 컴파일할때는 안정해져있지만 런타임때는 정해지는 것 ..
+	private T searchVO;
+	private String searchWord;
+	private String searchType;
+	private String funcName = "paging";
 	
 	public void setTotalRecord(long totalRecord) {
 		this.totalRecord = totalRecord;
@@ -53,7 +59,7 @@ public class PagingInfoVO {
 //	  </ul>
 	
 	public String getPagingHTML() {
-		String pattern = "<li class=\"page-item %s\"><a class=\"page-link\" href=\"?page=%d\">%s</a></li>";
+		String pattern = "<li class=\"page-item %s\"><a class=\"page-link\" href='javascript:"+funcName+"(%d);'>%s</a></li>";
 		StringBuffer html = new StringBuffer();
 		html.append("<ul class='pagination'>");
 		if(startPage > 1) {

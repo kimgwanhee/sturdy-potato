@@ -31,8 +31,6 @@ public class BuyerVO implements Serializable{
 	private String buyer_charger;
 	private String buyer_telext;
 	
-	
-	
 	@Override
 	public String toString() {
 		return "BuyerVO [buyer_id=" + buyer_id + ", buyer_name=" + buyer_name + ", buyer_lgu=" + buyer_lgu
