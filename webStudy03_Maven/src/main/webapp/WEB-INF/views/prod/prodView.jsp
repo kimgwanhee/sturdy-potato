@@ -135,7 +135,12 @@
 			</tr>
 		</tbody>
 	</table>
-
+	<%
+		boolean authorized = false;
+		MemberVO authMember = (MemberVO) session.getAttribute("authMember");
+		authorized = authMember!=null && "ROLE_ADMIN".equals(authMember.getMem_auth());
+		if(authorized){
+	%>
 	<h4>구매자 목록</h4>
 	<table>
 		<thead>
@@ -172,5 +177,8 @@
 		%>
 		</tbody>
 	</table>
+	<%
+	}
+	%>
 </body>
 </html>

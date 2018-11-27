@@ -11,7 +11,7 @@
 		FROM BUYER
 		<dynamic prepend="WHERE">
 			<isParameterPresent>
-				BUYER_LGU = #buyer_lgu#
+				BUYER_LGU LIKE '%'||#buyer_lgu#||'%'
 			</isParameterPresent>
 		</dynamic>
 	</select>

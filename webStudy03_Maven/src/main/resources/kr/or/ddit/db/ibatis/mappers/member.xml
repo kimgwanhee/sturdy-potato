@@ -32,8 +32,49 @@ PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
 		</dynamic>
 	</sql>
 	
-	<select id="selectMember" parameterClass="string" resultClass="memberVO">
-		<include refid="Member.selectMemberFrag"/>                     
+	<resultMap class="prodVO" id="prodMap">
+		<result property="prod_id" column="PROD_ID"/>
+		<result property="prod_name" column="PROD_NAME"/>
+		<result property="prod_cost" column="PROD_COST"/>
+		<result property="prod_price" column="PROD_PRICE"/>
+		<result property="prod_outline" column="PROD_OUTLINE"/>
+	</resultMap>
+	
+	<resultMap class="memberVO" id="memberMap" groupBy="mem_id">
+		<result property="mem_id" column="MEM_ID"/>
+		<result property="mem_pass" column="MEM_PASS"/>
+		<result property="mem_name" column="MEM_NAME"/>
+		<result property="mem_regno1" column="MEM_REGNO1"/>
+		<result property="mem_regno2" column="MEM_REGNO2"/>
+		<result property="mem_bir" column="MEM_BIR"/>
+		<result property="mem_zip" column="MEM_ZIP"/>
+		<result property="mem_add1" column="MEM_ADD1"/>
+		<result property="mem_add2" column="MEM_ADD2"/>
+		<result property="mem_hometel" column="MEM_HOMETEL"/>
+		<result property="mem_comtel" column="MEM_COMTEL"/>
+		<result property="mem_hp" column="MEM_HP"/>
+		<result property="mem_mail" column="MEM_MAIL"/>
+		<result property="mem_job" column="MEM_JOB"/>
+		<result property="mem_like" column="MEM_LIKE"/>
+		<result property="mem_memorial" column="MEM_MEMORIAL"/>
+		<result property="mem_mileage" column="MEM_MILEAGE"/>
+		<result property="mem_delete" column="MEM_DELETE"/>
+		<result property="mem_auth" column="MEM_AUTH"/>
+		
+		<result property="prodList" resultMap="Member.prodMap" javaType="java.util.List"/>
+	</resultMap>
+	
+	<select id="selectMember" parameterClass="string" resultMap="Member.memberMap">
+		SELECT          
+			MEM_ID,    MEM_PASS,    MEM_NAME,    MEM_REGNO1,          
+			MEM_REGNO2,    TO_CHAR(MEM_BIR,'YYYY-MM-DD') AS MEM_BIR,    MEM_ZIP,    MEM_ADD1,         
+			MEM_ADD2,    MEM_HOMETEL,    MEM_COMTEL,    MEM_HP,      
+			MEM_MAIL,    MEM_JOB,    MEM_LIKE,    MEM_MEMORIAL,      
+			 TO_CHAR(MEM_MEMORIALDAY,'YYYY-MM-DD') AS MEM_MEMORIALDAY,    MEM_MILEAGE,    MEM_DELETE  
+			 ,MEM_AUTH
+			 , PROD_ID, PROD_NAME, PROD_COST, PROD_PRICE, PROD_OUTLINE
+		FROM MEMBER LEFT OUTER JOIN CART ON(MEM_ID = CART_MEMBER)
+					LEFT OUTER JOIN	PROD ON(CART_PROD = PROD_ID)  
 		WHERE MEM_ID=#MEM_ID#                                           
 	</select>
 	 

@@ -29,4 +29,11 @@ public interface IBuyerService {
 	 * @return PKDUPLICATED, OK, FAILED
 	 */
 	public ServiceResult registBuyer(BuyerVO buyer);
+	
+	/**
+	 * buyer 수정
+	 * @param buyer_id
+	 * @return OK, FAILED
+	 */
+	public ServiceResult modifyBuyer(BuyerVO buyer);
 }

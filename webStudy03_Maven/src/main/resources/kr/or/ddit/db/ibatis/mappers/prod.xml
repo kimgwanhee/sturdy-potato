@@ -39,14 +39,14 @@
 		<result property="buyer_comtel" column="BUYER_COMTEL"></result>
 	</resultMap>
 	
-	<resultMap class="memberVO" id="memberMap">
-		<result property="mem_id" column="MEM_ID"/>
-		<result property="mem_name" column="MEM_NAME"/>
-		<result property="mem_add1" column="MEM_ADD1"/>
-		<result property="mem_add2" column="MEM_ADD2"/>
-		<result property="mem_hp" column="MEM_HP"/>
-		<result property="mem_mail" column="MEM_MAIL"/>
-	</resultMap>
+<!-- 	<resultMap class="memberVO" id="memberMap"> -->
+<!-- 		<result property="mem_id" column="MEM_ID"/> -->
+<!-- 		<result property="mem_name" column="MEM_NAME"/> -->
+<!-- 		<result property="mem_add1" column="MEM_ADD1"/> -->
+<!-- 		<result property="mem_add2" column="MEM_ADD2"/> -->
+<!-- 		<result property="mem_hp" column="MEM_HP"/> -->
+<!-- 		<result property="mem_mail" column="MEM_MAIL"/> -->
+<!-- 	</resultMap> -->
 		
 	<resultMap class="prodVO" id="prodMap" groupBy="prod_id">
 		<result property="prod_id" column="PROD_ID"/>
@@ -72,21 +72,45 @@
 		<result property="prod_mileage" column="PROD_MILEAGE"/>
 		
 		<result property="buyer" resultMap="Prod.buyerMap" />
-		<result property="customers" resultMap="Prod.memberMap" javaType="java.util.List"/>
+		<result property="customers" javaType="java.util.List" column="PROD_ID" 
+		select="Prod.selectCustomers" />
 	</resultMap>
-	
+	<select id="selectCustomers" resultClass="memberVO">
+		SELECT MEM_ID, MEM_NAME, MEM_ADD1, MEM_ADD2, MEM_HP, MEM_MAIL
+		FROM CART INNER JOIN MEMBER ON(CART_MEMBER = MEM_ID)
+		WHERE CART_PROD = #prod_id#
+	</select>
 	<select id="selectProd" parameterClass="string" resultMap="Prod.prodMap">
 		SELECT 
 		    PROD_ID,PROD_NAME,PROD_LGU,PROD_BUYER, PROD_COST,
 		    PROD_PRICE,PROD_SALE, PROD_OUTLINE, PROD_DETAIL,PROD_IMG,
 		    PROD_TOTALSTOCK,TO_CHAR(PROD_INSDATE, 'YYYY-MM-DD') PROD_INSDATE,PROD_PROPERSTOCK,
 		    PROD_SIZE,PROD_COLOR, PROD_DELIVERY, PROD_UNIT, PROD_QTYIN, PROD_QTYSALE, PROD_MILEAGE,
-		    LPROD_NM, BUYER_NAME, BUYER_ADD1, BUYER_CHARGER, BUYER_COMTEL ,
-		    MEM_ID, MEM_NAME, MEM_ADD1, MEM_ADD2, MEM_HP, MEM_MAIL
+		    LPROD_NM, BUYER_NAME, BUYER_ADD1, BUYER_CHARGER, BUYER_COMTEL 
 		FROM PROD INNER JOIN LPROD ON (PROD_LGU = LPROD_GU) 
 		          INNER JOIN BUYER ON (PROD_BUYER = BUYER_ID)
-		          LEFT OUTER JOIN CART ON(PROD_ID = CART_PROD) 
-		          LEFT OUTER JOIN MEMBER ON(CART_MEMBER = MEM_ID) 
 		WHERE PROD_ID = #prod_id#
 	</select>
+	
+	<insert id="insertProd" parameterClass="prodVO">
+		<selectKey resultClass="string" keyProperty="prod_id">
+<!-- 			PK 생성 쿼리 -->
+			SELECT #prod_lgu#||LPAD(NVL(TO_NUMBER(SUBSTR(MAX(PROD_ID),5)),0) + 1, 6, '0')
+			FROM PROD
+			WHERE PROD_LGU = #prod_lgu#
+		</selectKey>
+			INSERT INTO prod (
+			    PROD_ID, PROD_NAME, PROD_LGU, PROD_BUYER,
+			    PROD_COST, PROD_PRICE, PROD_SALE, PROD_OUTLINE,
+			    PROD_DETAIL, PROD_IMG, PROD_TOTALSTOCK, PROD_INSDATE,
+			    PROD_PROPERSTOCK, PROD_SIZE, PROD_COLOR, PROD_DELIVERY,
+			    PROD_UNIT, PROD_QTYIN, PROD_QTYSALE, PROD_MILEAGE
+			) VALUES (
+			    #prod_id#, #prod_name#, #prod_lgu#, #prod_buyer#,
+			    #prod_cost#, #prod_price#, #prod_sale#, #prod_outline#,
+			    #prod_detail#, #prod_img#, #prod_totalstock#, TO_DATE(#prod_insdate#, 'YYYY-MM-DD'),
+			    #prod_properstock#, #prod_size#, #prod_color#, #prod_delivery#,
+			    #prod_unit#, #prod_qtyin#, #prod_qtysale#, #prod_mileage#
+			)
+	</insert>
 </sqlMap>

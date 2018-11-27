@@ -1,6 +1,7 @@
 package kr.or.ddit.prod.controller;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.List;
 import java.util.Map;
 
@@ -9,6 +10,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import kr.or.ddit.mvc.ICommandHandler;
 import kr.or.ddit.prod.dao.IOtherDAO;
@@ -19,6 +22,7 @@ import kr.or.ddit.vo.BuyerVO;
 import kr.or.ddit.vo.MemberVO;
 import kr.or.ddit.vo.PagingInfoVO;
 import kr.or.ddit.vo.ProdVO;
+import kr.or.ddit.web.calculate.Mime;
 
 public class ProdListController implements ICommandHandler {
 
@@ -48,22 +52,33 @@ public class ProdListController implements ICommandHandler {
 		List<BuyerVO> buyerList = otherDAO.selectBuyerList(null);
 		req.setAttribute("lprodList", lprodList);
 		req.setAttribute("buyerList", buyerList);
+		
 		//4. 로직선택
 //		service.retrieveProdList(pagingVO);
 		//5. 로직을 돌려주는 데이타를 갖고 
 		long totalRecord = service.retrieveProdCount(pagingVO);
 		pagingVO.setTotalPage(totalRecord);
-		
 		List<ProdVO> prodList = service.retrieveProdList(pagingVO);
 		pagingVO.setDataList(prodList);
 		
-		req.setAttribute("pagingVO", pagingVO);
-		
-		
+		String accept = req.getHeader("Accept");
+		if(StringUtils.containsIgnoreCase(accept, "json")) {
+			//JSON
+			resp.setContentType(Mime.JSON.contentType);
+			ObjectMapper mapper = new ObjectMapper();
+			//자바를 json으로 바꾸려면 마샬링
+			try(
+			PrintWriter out = resp.getWriter();
+			){
+			mapper.writeValue(out, pagingVO);
+			}
+			return null;
+		}else{
+			//HTML
+			req.setAttribute("pagingVO", pagingVO);
+			return "prod/prodList";
+		}		
 		//6. 공유하기
 		//7. 뷰선택
-		
-		
-		return "prod/prodList";
 	}
 }

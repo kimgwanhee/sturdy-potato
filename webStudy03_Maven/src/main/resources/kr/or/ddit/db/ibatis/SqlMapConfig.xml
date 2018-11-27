@@ -2,7 +2,7 @@
 <!DOCTYPE sqlMapConfig PUBLIC "-//ibatis.apache.org//DTD SQL Map Config 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-config-2.dtd" >
 <sqlMapConfig>
 <properties resource ="kr/or/ddit/db/dbInfo.properties"/>
-<settings useStatementNamespaces="true"></settings>
+<settings useStatementNamespaces="true" lazyLoadingEnabled="true"></settings>
 	<typeAlias alias="memberVO" type="kr.or.ddit.vo.MemberVO"/>
 	<typeAlias alias="pagingVO" type="kr.or.ddit.vo.PagingInfoVO"/>
 	<typeAlias alias="buyerVO" type="kr.or.ddit.vo.BuyerVO"/>

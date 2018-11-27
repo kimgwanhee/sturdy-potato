@@ -26,8 +26,10 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
 <script type="text/javascript">
 	function <%=pagingVO.getFuncName()%>(page){
-		document.searchForm.page.value = page;
-		document.searchForm.submit();
+		$("[name='searchForm']").find("[name='page']").val(page);
+// 		document.searchForm.page.value = page; 위코드와 똑같 
+		$("[name='searchForm']").submit();//함수 호출하고 submit 
+// 		document.searchForm.submit(); 위코드와 똑같지만 함수 호출만 하고 끝 (동기방식 먹통됨)
 	}
 	
 	$(function(){
@@ -50,14 +52,57 @@
 			var prod_id = $(this).find("td:first").text();//자식중에서 특정조건에 맞는애들만 찾는다는..
 			location.href = "<%=request.getContextPath()%>/prod/prodView.do?what="+prod_id;
 		});
+		
+		var tbodyTag = $('#listBody');
+		var navTag = $('#pagenav');
+		
+		$("[name='searchForm']").on("submit", function(event){
+			event.preventDefault();
+			var data = $(this).serialize();//queryString 생성
+			$.ajax({
+// 				url : "",//어디로 요청을 보낼거냐 - 생략 - 현재브라우저가 가지고있는 주소 그대로 쓴다(prodList.do)
+// 				method : "",//get방식을 쓰겠다. - form태그를 비동기로 쓰고싶은데 그  form태그의 액션 메소드 모두 그대로 쓰겠다 없음->나도생략
+				data : data,
+				dataType:"json",//공통표현방식? ? ? ? ? ? ? ? ? ? ? ? ? ? ?
+// 				data:{//page prodlgu prodbuyer proname  4개 가지고감//이 값들은 아래에있는 searchform에서 어떤값들을 가지고있냐에따라 달라짐
+// 				},
+				success:function(resp){//resp 는 json데이타가 언마샬링되어있는..?
+					var prodList = resp.dataList;
+					var html="";
+					if(prodList){
+						$.each(prodList, function(idx, prod){
+							html += "<tr>";
+							html += "<td>"+prod.prod_id+"</td>";
+							html += "<td>"+prod.prod_name+"</td>";
+							html += "<td>"+prod.lprod_nm+"</td>";
+							html += "<td>"+prod.buyer_name+"</td>";
+							html += "<td>"+prod.prod_cost+"</td>";
+							html += "<td>"+prod.prod_outline+"</td>";
+							html += "<td>"+prod.prod_mileage+"</td>";
+							html += "</tr>";
+						});
+					}else{
+						html+="<tr><td colspan = '7'> 상품이 없음. </td></tr>";
+					}
+					tbodyTag.html(html);
+					navTag.html(resp.pagingHTML);
+					$("[name='page']").val("");
+				},
+				error:function(){
+					
+				}
+			});
+			return false
+		});
 	});
 </script>
 </head>
 <body>
 <!-- 스크린사이즈 7 -->
 <!-- 블럭사이즈 4 -->
-<form name="searchForm">
-	<input type="hidden" name="page" />
+<!-- gui이벤트.. on계열은 이벤트핸들러를 jquery쓰기전에 자바스크립트로 넣은것 -->
+<form name="searchForm" onsubmit="return false;">
+	<input type="text" name="page" />
 	<select name="prod_lgu">
 		<option value="">분류선택</option>
 		<%
@@ -81,8 +126,10 @@
 	<input type="text" name="prod_name" value="${pagingVO.searchVO.prod_name}"/>
 	<input type="submit" name="검색" />
 </form>
+<input type="button" class="btn btn-info" value="신규 상품 등록" onclick="location.href='<%=request.getContextPath()%>/prod/prodInsert.do';" 
+/>
 
-<table>
+<table class="table">
 	<thead>
 		<tr>
 			<th>상품코드</th>
@@ -94,6 +141,7 @@
 			<th>마일리지</th>
 		</tr>
 	</thead>
+	
 	<tbody id="listBody">
 	<%
 		if(prodList.size()>0){
@@ -122,7 +170,7 @@
 	<tfoot>
 		<tr>
 			<td colspan = "7">
-				<nav aria-label="Page navigation example">
+				<nav aria-label="Page navigation example" id="pagenav">
 			 	<%= pagingVO.getPagingHTML() %>
 				</nav>
 			</td>

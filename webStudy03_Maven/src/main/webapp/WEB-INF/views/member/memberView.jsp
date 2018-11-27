@@ -1,3 +1,5 @@
+<%@page import="java.util.List"%>
+<%@page import="kr.or.ddit.vo.ProdVO"%>
 <%@page import="kr.or.ddit.vo.MemberVO"%>
 <%@page import="kr.or.ddit.member.service.MemberServiceImpl"%>
 <%@page import="kr.or.ddit.member.service.IMemberService"%>
@@ -67,18 +69,16 @@ $(function(){
 		}
 	}
 	if(mutable){
-%>
-	
-	
-<form name="delForm" method="post" action="<%= request.getContextPath()%>/member/memberDelete.do">
-	<input type="hidden" name="mem_id" value="<%=member.getMem_id()%>"/>
-	<input type="hidden" name="mem_pass" />
-</form>
-
-<form action = "<%=request.getContextPath()%>/member/memberUpdate.do" method="post">
-<%
+	%>
+		<form name="delForm" method="post" action="<%= request.getContextPath()%>/member/memberDelete.do">
+			<input type="hidden" name="mem_id" value="<%=member.getMem_id()%>"/>
+			<input type="hidden" name="mem_pass" />
+		</form>
+		
+		<form action = "<%=request.getContextPath()%>/member/memberUpdate.do" method="post">
+	<%
 	}
-%>
+	%>
 <h4>회원정보 상세조회 및 수정폼</h4>
 	<div>
 		<table>
@@ -191,13 +191,43 @@ $(function(){
 				</td>
 			</tr>
 		</table>
-		<%
-		if(mutable){
-		%>
 	</div>
 </form>
-<%
+<h4>회원의 구매상품 목록</h4>
+<table>
+	<thead>
+		<tr>
+			<th>PROD_ID</th>
+			<th>PROD_NAME</th>
+			<th>PROD_COST</th>
+			<th>PROD_PRICE</th>
+			<th>PROD_OUTLINE</th>
+		</tr>
+	</thead>
+	<tbody>
+	<%
+		List<ProdVO> prodList = member.getProdList();
+		if(prodList != null && prodList.size() > 0){
+			for(ProdVO pv : prodList){
+				%>
+				<tr>
+					<td><%=pv.getProd_id()%></td>
+					<td><%=pv.getProd_name()%></td>
+					<td><%=pv.getProd_cost()%></td>
+					<td><%=pv.getProd_price()%></td>
+					<td><%=pv.getProd_outline()%></td>
+				</tr>
+				<%
+			}
+		}else{
+			%>
+			<tr>
+				<td colspan="5">구매상품없음</td>
+			</tr>
+			<%
 		}
-%>
+	%>
+	</tbody>
+</table>
 </body>
 </html>

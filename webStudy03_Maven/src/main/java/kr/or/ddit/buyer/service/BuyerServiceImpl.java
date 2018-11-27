@@ -38,4 +38,17 @@ public class BuyerServiceImpl implements IBuyerService {
 		}
 		return result;
 	}
+
+	@Override
+	public ServiceResult modifyBuyer(BuyerVO buyer) {
+		ServiceResult result = ServiceResult.FAILED;
+		//dao int
+		//if(int)
+		//resul ok
+		int check = buyerDao.updateBuyer(buyer);
+		if(check>0) {
+			result = ServiceResult.OK;
+		}
+		return result;
+	}
 }

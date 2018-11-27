@@ -15,8 +15,12 @@ public class ProdDAOImpl implements IProdDAO {
 
 	@Override
 	public String insertProd(ProdVO prod) {
-		// TODO Auto-generated method stub
-		return null;
+		try {
+				//selectKey 엘리먼트에서 생성된 키 값.
+				return (String) sqlMapClient.insert("Prod.insertProd", prod);//selectkey사용 무조건 insert써야함
+			}catch (SQLException e) {
+				throw new RuntimeException(e);
+			}
 	}
 
 	@Override
