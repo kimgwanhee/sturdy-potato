@@ -17,6 +17,7 @@
 %>
 <body>
 <h4>Buyer 상세정보</h4>
+<form name="" method="post" action="<%=request.getContextPath()%>/buyer/buyerUpdate.do">
 	<table class="table">
 		<thead class="thead-dark">
 		
@@ -24,7 +25,7 @@
 		<tbody>
 			<tr>
 				<th>BUYER_ID</th>
-				<td><input type="hidden" name="buyer_id" value="<%=buyer.getBuyer_id()%>" />
+				<td><input type="text" readonly="readonly" name="buyer_id" value="<%=buyer.getBuyer_id()%>" />
 					</td>
 			</tr>
 			<tr>
@@ -34,7 +35,7 @@
 			</tr>
 			<tr>
 				<th>BUYER_LGU</th>
-				<td><input type="text" name="buyer_lgu" value="<%=buyer.getBuyer_lgu()%>" />
+				<td><input type="text" readonly="readonly" name="buyer_lgu" value="<%=buyer.getBuyer_lgu()%>" />
 					</td>
 			</tr>
 			<tr>
@@ -87,13 +88,19 @@
 				<td><input type="text" name="buyer_charger"	 value="<%=buyer.getBuyer_charger()%>" />
 					</td>
 			</tr>
-			<tr>
-				<th>BUYER_TELEXT</th>
-				<td><input type="text" name="buyer_telext"	 value="<%=buyer.getBuyer_telext()%>" />
-					</td>
-			</tr>
 			
 		</tbody>
+		<tfoot>
+			<tr>
+				<td colspan="2">
+					<input type="button" value="뒤로" onclick="history.back();"/>
+					<input type="reset" value="취소"/>
+					<input type="submit" value="수정"/>
+					<input type="button" value="삭제" id="delBtn"/>
+				</td>
+			</tr>
+		</tfoot>
 	</table>
+</form>
 </body>
 </html>

@@ -37,4 +37,22 @@ public class BuyerDAOImpl implements IBuyerDAO{
 				throw new RuntimeException(e);
 			}
 	}
+
+	@Override
+	public long countBuyer(String buyer_lgu) {
+		try {
+				return (long) sqlMapClient.queryForObject("Buyer.countBuyer", buyer_lgu);
+		}catch (SQLException e) {
+				throw new RuntimeException(e);
+			}
+	}
+
+	@Override
+	public int updateBuyer(BuyerVO buyer) {
+		try {
+				return sqlMapClient.update("Buyer.updateBuyer",buyer);
+			}catch (SQLException e) {
+				throw new RuntimeException(e);
+			}
+	}
 }

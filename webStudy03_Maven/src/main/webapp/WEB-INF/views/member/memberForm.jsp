@@ -8,7 +8,6 @@
 <jsp:useBean id="member" class="kr.or.ddit.vo.MemberVO" scope="request"></jsp:useBean>
 <jsp:useBean id="error" class="java.lang.String" scope="request"></jsp:useBean>
 <jsp:useBean id="errors" class="java.util.LinkedHashMap" scope="request"></jsp:useBean>
-
 <%
    
 %>

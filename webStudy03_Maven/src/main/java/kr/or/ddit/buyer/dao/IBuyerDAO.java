@@ -24,4 +24,18 @@ public interface IBuyerDAO {
 	 * @return 
 	 */
 	public int insertBuyer(BuyerVO buyer);
+	
+	/**
+	 * 코드 생성해주기 위한 buyer_lgu count
+	 * @param buyer_lgu
+	 * @return
+	 */
+	public long countBuyer(String buyer_lgu);
+	
+	/**
+	 * Buyer를 수정해주기 위한 메서드
+	 * @param buyer_id
+	 * @return
+	 */
+	public int updateBuyer(BuyerVO buyer);
 }
