@@ -32,6 +32,12 @@ public class PagingInfoVO {
 	private long endRow;
 	private List<MemberVO> dataList;
 	
+	public List<MemberVO> getDataList() {
+		return dataList;
+	}
+	public void setDataList(List<MemberVO> dataList) {
+		this.dataList = dataList;
+	}
 	public void setTotalRecord(long totalRecord) {
 		this.totalRecord = totalRecord;
 		totalPage = totalRecord%screenSize==0?totalRecord/screenSize

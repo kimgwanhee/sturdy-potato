@@ -12,7 +12,6 @@
 
 	PagingInfoVO pagingVO = (PagingInfoVO)request.getAttribute("pagingVO");
 	List<MemberVO> memberList = pagingVO.getDataList();
-	
 %>
 <!DOCTYPE html>
 <html>
@@ -40,7 +39,6 @@
 		</tr>
 	</thead>
 	<tbody>
-
 		<%
 			if(memberList.size()==0){
 		%>
@@ -59,7 +57,6 @@
 				}
 			}
 		%>
-	
 	</tbody>
 	<tfoot>
 		<tr>
