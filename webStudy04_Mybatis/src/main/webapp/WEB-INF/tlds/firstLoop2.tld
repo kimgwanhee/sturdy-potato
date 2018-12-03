@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<taglib version="2.1" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xml="http://www.w3.org/XML/1998/namespace" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-jsptaglibrary_2_1.xsd ">
+  <tlib-version>1.0</tlib-version>
+  <short-name>loop</short-name>
+  <uri>http://www.ddit.or.kr/loopTag</uri>
+  <tag>
+  	<name>myforEach</name>
+  	<tag-class>kr.or.ddit.tags.FirstLoopTag</tag-class>
+  	<body-content>empty</body-content>
+  	<attribute>
+  		<name>loopCount</name>
+  		<required>true</required>
+  	</attribute>
+  	
+  	<attribute>
+  		<name>data</name>
+  		<required>false</required>
+<!--   		필수속성이 아니라는것 -->
+		<rtexprvalue>true</rtexprvalue>
+<!-- 		데이타라는 속성에서는 el을 쓸수있다는것 -->
+  	</attribute>
+  </tag>
+</taglib>

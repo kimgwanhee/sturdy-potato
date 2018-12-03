@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<!-- ibatis와는 다르게 namespace에 이 xml을 사용하는 dao quailfied name 을 넣는다. -->
+<mapper namespace="kr.or.ddit.member.dao.IMemberDAO">
+	<sql id="selectMemberFrag">
+		SELECT MEM_ID, MEM_PASS, MEM_NAME, MEM_REGNO1, MEM_REGNO2,
+		TO_CHAR(MEM_BIR,'YYYY-MM-DD') AS MEM_BIR, MEM_ZIP,
+		MEM_ADD1, MEM_ADD2, MEM_HOMETEL, MEM_COMTEL, MEM_HP, MEM_MAIL, MEM_JOB,
+		MEM_LIKE, MEM_MEMORIAL, TO_CHAR(MEM_MEMORIALDAY,'YYYY-MM-DD') AS
+		MEM_MEMORIALDAY, MEM_MILEAGE, MEM_DELETE,MEM_AUTH
+		FROM MEMBER 
+	</sql>
+	<!-- mybatis에는 dynamic이라는 element가 없다. -->
+	<!-- ibatis에서는 inline 파라미터가 #id#이었다면 mybatis에서는 #{id} 이다-->
+	<sql id="searchFrag">
+		<where>
+			<if test="@org.apache.commons.lang3.StringUtils@isNotBlank(searchWord)">
+				<if test="searchType.equals('name')" >
+					MEM_NAME LIKE '%'||#{searchWord}||'%'
+				</if>
+				<if test="searchType.equals('address')">
+					MEM_ADD1 like '%'||#{searchWord}||'%'
+				</if>
+				<if test="searchType.equals('all')">
+					MEM_NAME LIKE '%'||#{searchWord}||'%'
+					OR
+					MEM_ADD1 LIKE '%'||#{searchWord}||'%'
+				</if>
+			</if>
+		</where>
+	</sql>
+	
+	<!-- 각 쿼리 statement의 id값은 dao의 메서드명과 동일해야한다. parameterType과 resultType도 마찬가지-->
+	<select id="selectTotalRecord" parameterType="pagingVO" resultType="long">
+		select count(*) from member
+		<include refid="kr.or.ddit.member.dao.IMemberDAO.searchFrag"/>
+	</select>
+	
+	<select id="selecteMemberList" parameterType="pagingVO" resultType="memberVO">
+		select b.*
+		  from( select rownum as rnum, a.*
+			      from (
+		<include refid="kr.or.ddit.member.dao.IMemberDAO.selectMemberFrag" />
+		<include refid="kr.or.ddit.member.dao.IMemberDAO.searchFrag"/>
+			     order by rowid desc) a ) b
+		<!-- <![CDATA[ -->
+		<!-- WHERE RNUM >=1 AND RNUM <=10 -->
+		<!-- ]]> -->
+		where rnum between #{startRow} and #{endRow}
+	</select>
+	
+	<resultMap type="prodVO" id="prodMap">
+		<result property="prod_id" column="PROD_ID"/>
+		<result property="prod_name" column="PROD_NAME"/>
+		<result property="prod_cost" column="PROD_COST"/>
+		<result property="prod_price" column="PROD_PRICE"/>
+		<result property="prod_outline" column="PROD_OUTLINE"/>
+	</resultMap>
+	
+	<resultMap type="memberVO" id="memberMap" >
+		<!-- pk라는걸 mybatis에게 명시적으로 알려주는 용도로 id태그사용 -->
+		<id property="mem_id" column="MEM_ID"/>
+		<result property="mem_pass" column="MEM_PASS"/>
+		<result property="mem_name" column="MEM_NAME"/>
+		<result property="mem_regno1" column="MEM_REGNO1"/>
+		<result property="mem_regno2" column="MEM_REGNO2"/>
+		<result property="mem_bir" column="MEM_BIR"/>
+		<result property="mem_zip" column="MEM_ZIP"/>
+		<result property="mem_add1" column="MEM_ADD1"/>
+		<result property="mem_add2" column="MEM_ADD2"/>
+		<result property="mem_hometel" column="MEM_HOMETEL"/>
+		<result property="mem_comtel" column="MEM_COMTEL"/>
+		<result property="mem_hp" column="MEM_HP"/>
+		<result property="mem_mail" column="MEM_MAIL"/>
+		<result property="mem_job" column="MEM_JOB"/>
+		<result property="mem_like" column="MEM_LIKE"/>
+		<result property="mem_memorial" column="MEM_MEMORIAL"/>
+		<result property="mem_memorialday" column="MEM_MEMORIALDAY"/>
+		<result property="mem_mileage" column="MEM_MILEAGE"/>
+		<result property="mem_delete" column="MEM_DELETE"/>
+		<result property="mem_auth" column="MEM_AUTH"/>
+		<!-- 1:1관계 association태그 1:n 관계일때는 collection태그 -->
+		<collection property="prodList" resultMap="prodMap"/>
+	</resultMap>
+	
+	<!-- 동일한 xml안에있다면 namespace명 생략 가능 -->
+	<select id="selectMember" parameterType="string" resultMap="memberMap">
+		SELECT MEM_ID, MEM_PASS, MEM_NAME, MEM_REGNO1, MEM_REGNO2,
+		TO_CHAR(MEM_BIR,'YYYY-MM-DD') AS MEM_BIR, MEM_ZIP,
+		MEM_ADD1, MEM_ADD2, MEM_HOMETEL, MEM_COMTEL, MEM_HP, MEM_MAIL, MEM_JOB,
+		MEM_LIKE, MEM_MEMORIAL, TO_CHAR(MEM_MEMORIALDAY,'YYYY-MM-DD') AS
+		MEM_MEMORIALDAY, MEM_MILEAGE, MEM_DELETE, MEM_AUTH
+		,PROD_ID, PROD_NAME, PROD_COST, PROD_PRICE, PROD_OUTLINE
+		FROM MEMBER LEFT OUTER JOIN CART ON(CART_MEMBER = MEM_ID)
+            		LEFT OUTER JOIN PROD ON (PROD_ID=CART_PROD)
+		WHERE MEM_ID=#{mem_id}
+	</select>
+	
+	<insert id="insertMember" parameterType="memberVO">
+		INSERT INTO MEMBER (
+		MEM_ID, MEM_PASS, MEM_NAME, MEM_REGNO1, MEM_REGNO2, MEM_BIR, MEM_ZIP,
+		MEM_ADD1,
+		MEM_ADD2, MEM_HOMETEL, MEM_COMTEL, MEM_HP, MEM_MAIL, MEM_JOB, MEM_LIKE,
+		MEM_MEMORIAL,
+		MEM_MEMORIALDAY, MEM_MILEAGE,MEM_AUTH
+		) VALUES (
+		#{mem_id}, #{mem_pass}, #{mem_name}, #{mem_regno1}, #{mem_regno2}, #{mem_bir},
+		#{mem_zip}, #{mem_add1},
+		#{mem_add2}, #{mem_hometel}, #{mem_comtel}, #{mem_hp}, #{mem_mail}, #{mem_job},
+		#{mem_like}, #{mem_memorial},
+		#{mem_memorialday}, 1000,'ROLE_USER'
+		)
+	</insert>
+	 
+	<update id="updateMember" parameterType="memberVO">
+		UPDATE
+		MEMBER
+		SET MEM_NAME=#{mem_name},
+		MEM_BIR=#{mem_bir},
+		MEM_ZIP=#{mem_zip},
+		MEM_ADD1=#{mem_add1},
+		MEM_ADD2=#{mem_add2},
+		MEM_HOMETEL=#{mem_hometel},
+		MEM_COMTEL=#{mem_comtel},
+		MEM_HP=#{mem_hp},
+		MEM_MAIL=#{mem_mail},
+		MEM_JOB=#{mem_job},
+		MEM_LIKE=#{mem_like},
+		MEM_MEMORIAL=#{mem_memorial},
+		MEM_MEMORIALDAY=#{mem_memorialday}
+		WHERE MEM_ID = #{mem_id}
+	</update>
+	
+	<update id="deleteMember" parameterType="string">
+		UPDATE MEMBER SET
+		MEM_DELETE ='Y' WHERE MEM_ID=#{mem_id}
+	</update>
+</mapper>

@@ -1,0 +1,60 @@
+<%@page import="kr.or.ddit.vo.MemberVO"%>
+<%@page import="kr.or.ddit.member.service.MemberServiceImpl"%>
+<%@page import="kr.or.ddit.member.service.IMemberService"%>
+<%@page import="kr.or.ddit.member.dao.IMemberDAO"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%
+	
+	request.setCharacterEncoding("UTF-8");
+	IMemberService service = new MemberServiceImpl();
+	
+// 1. 파라미터를 확보(특수문자, 즉 한글데이터가 포함되어있는 처리(파라미터 꺼내기전에!))
+	//폼에서 입력한 값(요청)을 바로 vo에 넣기
+	MemberVO mv = new MemberVO();
+	
+	mv.setMem_id(request.getParameter("mem_id"));
+	mv.setMem_pass(request.getParameter("mem_pass"));
+	mv.setMem_name(request.getParameter("mem_name"));
+	mv.setMem_regno1(request.getParameter("mem_regno1"));
+	mv.setMem_regno2(request.getParameter("mem_regno2"));
+	mv.setMem_bir(request.getParameter("mem_bir"));
+	mv.setMem_zip(request.getParameter("mem_zip"));
+	mv.setMem_add1(request.getParameter("mem_add1"));
+	mv.setMem_add2(request.getParameter("mem_add2"));
+	mv.setMem_hometel(request.getParameter("mem_hometel"));
+	mv.setMem_comtel(request.getParameter("mem_comtel"));
+	mv.setMem_hp(request.getParameter("mem_hp"));
+	mv.setMem_mail(request.getParameter("mem_mail"));
+	mv.setMem_job(request.getParameter("mem_job"));
+	mv.setMem_like(request.getParameter("mem_like"));
+	mv.setMem_memorial(request.getParameter("mem_memorial"));
+	mv.setMem_memorialday(request.getParameter("mem_memorialday"));
+	
+	
+	
+	service.registMember(mv);
+		
+	String goPage="/member/memberList.jsp";
+	boolean redirect = false;
+	
+// 2. 파라미터 검증(뭘 어떻게 검증할건지? 검증물 필요-> 필수데이터와 부가데이터로 나뉘는데-> null을 허용하느냐..사이즈 숫자나 문자열 등)
+// 	- 검증룰 : member 테이블의 스키마를 확인, 필수데이터 검증은 반드시!! 
+	response.sendRedirect(request.getContextPath()+goPage);//클라이언트사이드방식	
+
+	if(redirect){
+		
+	}
+	
+
+// 3. 통과
+// 	- 1)비즈니스로직객체와의 의존관계 형성
+// 	  2)서비스에 가서 신규등록할수 있는 로직 선택
+// 	  	PKDUPLICATED (중복되면 등록실패 -> memberForm.jsp로 이동, forward)(메시지, 기존입력데이터 공유)
+// 	  	OK : 요청처리끝난상태 -> memberList.jsp로 이동. 요청이 끝나서 살려둘필요는 없으니 redirect
+// 	  	FAILED : 사과메세지, 다시 등록버튼 누를수 있는memberForm.jsp로 이동, forward(기존입력데이터, 메시지공유 )
+// 4. 불통
+// 	memberForm.jsp로 이동 , 이름과 비번을 제외하고 잘 입력했다면 다른거 가지고가야함 (기존 입력 데이터, 검증결과메시지 공유(메시지 자체가 여러건일수 있으니 컬렉션형태가 되어야한다?))
+// 	 -> 왜때문에 검증불통?메시지보여주기 -> forward방식이여야함
+	
+%>

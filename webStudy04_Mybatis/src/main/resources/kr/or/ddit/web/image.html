@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset = "UTF-8">
+<script
+  src="https://code.jquery.com/jquery-3.3.1.min.js"
+  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+  crossorigin="anonymous"></script>
+	<script type="text/javascript">
+		$(function(){
+			var imgArea = $("#imgArea");
+			var pattern = '<img src="image.do?selname=%v" />';
+			$("[name='selname']").on("change", function(){
+				var filename = $(this).val();
+				imgArea.append(pattern.replace("%v", filename));
+			});
+		});
+	</script>
+		
+</head>
+<body>
+	<form name = "imgForm" action = "image.do" method ="get">
+		<select name="selname" >
+			@img
+		</select>
+		<!-- <input type="submit" value="전송"/> -->
+	</form>
+	
+	<div id = "imgArea">
+		@images
+	</div>
+<!-- 	@동적..-->
+<!--	<script type= "text/javascript"> -->
+		
+<!--  			var imgArea = document.getElementById("imgArea"); -->
+				
+<!--  			function changeHandler(event){ -->
+<!-- 			document.imgForm.submit(); -->
+<!--  				var filename = event.target.value; -->
+<!--  				//이때 가져오는게 select..value(옵션의 값) -->
+				
+<!--  				var pattern = '<img src="image.do?image=%v" />'; //저 패턴을 문자열로 사용해야하므로''  -->
+<!--  				//이제 실제파일명으로 바꿔주기 -->
+<!--  				imgArea.innerHTML = pattern.replace("%v", filename); -->
+<!--  			} -->
+<!-- 		</script> -->
+</body>
+</html>

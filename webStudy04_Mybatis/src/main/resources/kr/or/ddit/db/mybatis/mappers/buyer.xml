@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="kr.or.ddit.buyer.dao.IBuyerDAO">
+
+	<sql id="selectBuyerFrag">
+		SELECT
+		buyer_id, buyer_name, buyer_lgu, buyer_bank,
+		buyer_bankno, buyer_bankname, buyer_zip, buyer_add1,
+		buyer_add2, buyer_comtel, buyer_fax, buyer_mail,
+		buyer_charger, buyer_telext
+		FROM buyer
+	</sql>
+	
+	<sql id="searchFrag">
+		<where>
+			<if test="@org.apache.commons.lang3.StringUtils@isNotBlank(searchWord)">
+				<if test="searchType.equals('name')" >
+					BUYER_NAME LIKE '%'||#{searchWord}||'%'
+				</if>
+				<if test="searchType.equals('lprodNm')">
+					BUYER_LGU like '%'||#{searchWord}||'%'
+				</if>
+				<if test="searchType.equals('all')">
+					BUYER_NAME LIKE '%'||#{searchWord}||'%'
+					OR
+					BUYER_LGU LIKE '%'||#{searchWord}||'%'
+				</if>
+			</if>
+		</where>
+	</sql>
+	
+	<select id="selectBuyerList" resultType="buyerVO" parameterType="pagingVO">
+      SELECT B.*
+         FROM( SELECT ROWNUM AS RNUM, A.*
+                  FROM ( SELECT BUYER.* 
+                            FROM BUYER 
+                            ORDER BY ROWID DESC) A 
+               <include refid="kr.or.ddit.buyer.dao.IBuyerDAO.searchFrag"/>      
+                            ) b
+<!--            <![CDATA[ -->
+<!--               WHERE RNUM >=1 AND RNUM <=10 -->
+<!--            ]]> -->
+           WHERE RNUM BETWEEN #{startRow} AND #{endRow}
+  	</select>
+
+	<select id="selectTotalCount" resultType="Long">
+		select count(*) from buyer
+	</select>
+	
+	<select id="selectBuyer" parameterType="String" resultType="buyerVO">
+		<include refid="kr.or.ddit.buyer.dao.IBuyerDAO.selectBuyerFrag"/>
+		WHERE BUYER_ID = #{buyer_id}
+	</select>
+	
+	<select id="countBuyer" parameterType="string" resultType="Long">
+		select count(*)	from BUYER	where BUYER_LGU= #{buyer_lgu}
+	</select>
+	
+	<insert id="insertBuyer" parameterType="BuyerVO">
+		INSERT INTO buyer (
+			buyer_id, buyer_name, buyer_lgu, buyer_bank,
+			buyer_bankno, buyer_bankname, buyer_zip, buyer_add1,
+			buyer_add2, buyer_comtel, buyer_fax, buyer_mail,
+			buyer_charger
+		) VALUES (
+			#{buyer_id}, #{buyer_name}, #{buyer_lgu}, #{buyer_bank}, #{buyer_bankno},
+			#{buyer_bankname}, #{buyer_zip},
+			#{buyer_add1}, #{buyer_add2}, #{buyer_comtel}, #{buyer_fax}, #{buyer_mail},
+			#{buyer_charger}
+		)
+	</insert>
+	
+	<update id="updateBuyer" parameterType="buyerVO">
+		UPDATE buyer 
+		SET buyer_name =#{buyer_name}, buyer_lgu =#{buyer_lgu}, buyer_bank =#{buyer_bank}, buyer_bankno =#{buyer_bankno}
+			, buyer_bankname =#{buyer_bankname}, buyer_zip =#{buyer_zip}, buyer_add1 =#{buyer_add1}, buyer_add2 =#{buyer_add2}
+			, buyer_comtel =#{buyer_comtel}, buyer_fax =#{buyer_fax}, buyer_mail =#{buyer_mail}, buyer_charger =#{buyer_charger}
+		WHERE buyer_id =#{buyer_id}
+	</update>
+	
+</mapper>

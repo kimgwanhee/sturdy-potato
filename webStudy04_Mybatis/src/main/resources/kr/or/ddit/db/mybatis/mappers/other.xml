@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="kr.or.ddit.prod.dao.IOtherDAO">
+	<select id="selectLprodList" resultType="hashmap">
+		SELECT LPROD_GU, LPROD_NM
+		FROM LPROD
+	</select>
+	
+	<select id="selectBuyerList" resultType="buyerVO" parameterType="string">
+		SELECT BUYER_ID, BUYER_NAME, BUYER_LGU
+		FROM BUYER
+		<where>
+			<if test="@org.apache.commons.lang3.StringUtils@isNotBlank(buyer_lgu)">
+				BUYER_LGU LIKE '%'||#{buyer_lgu}||'%'
+			</if>
+		</where>
+	</select>
+</mapper>
