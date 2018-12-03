@@ -38,6 +38,12 @@ public class PagingInfoVO<T> {
 	private String searchType;
 	private String funcName = "paging";
 	
+	public List<MemberVO> getDataList() {
+		return dataList;
+	}
+	public void setDataList(List<MemberVO> dataList) {
+		this.dataList = dataList;
+	}
 	public void setTotalRecord(long totalRecord) {
 		this.totalRecord = totalRecord;
 		totalPage = totalRecord%screenSize==0?totalRecord/screenSize

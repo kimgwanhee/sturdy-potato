@@ -34,6 +34,10 @@
 	Map<String,String> lprodList = (Map<String,String>)request.getAttribute("lprodList");
 %>
 <body>
+<<<<<<< HEAD
+	<h4>재익이는 바보다</h4>
+	
+=======
  <form method="post" action="<%=request.getContextPath() %>/buyer/buyerInsert.do">
       <table>
          <tr>
@@ -181,5 +185,6 @@
          </tr>
       </table>
    </form>
+>>>>>>> branch 'master' of https://github.com/kimgwanhee/sturdy-potato.git
 </body>
 </html>
