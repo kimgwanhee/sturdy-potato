@@ -58,7 +58,6 @@ public class FrontController extends HttpServlet {
 	protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 //		1. 요청 매핑 설정 - web.xml가서 끝
 //		2. 요청 분석(주소, 파라미터, 메소드, 헤더...)-주소 분석하기 위해서 주소 꺼내는데 req안에있다.
-		req.setCharacterEncoding("UTF-8");
 		String uri = req.getRequestURI();
 //		/webStudy03_Maven/member/memberList.do
 		int cpLength = req.getContextPath().length();
@@ -67,7 +66,6 @@ public class FrontController extends HttpServlet {
 		uri = uri.substring(cpLength).split(";")[0];
 		System.out.println(uri);///member/memberList.do필요한 주소만 짤림
 		ICommandHandler handler = handlerMap.get(uri);
-		
 		
 		/*
 	.	ICommandHandler handler = null;//이제 부모 //다형성

@@ -31,5 +31,8 @@
 		<mapper resource="kr/or/ddit/db/mybatis/mappers/other.xml" />
 		<mapper resource="kr/or/ddit/db/mybatis/mappers/prod.xml" />
 		<mapper resource="kr/or/ddit/db/mybatis/mappers/buyer.xml" />
+		<mapper resource="kr/or/ddit/db/mybatis/mappers/board.xml" />
+		<mapper resource="kr/or/ddit/db/mybatis/mappers/pds.xml" />
+		<mapper resource="kr/or/ddit/db/mybatis/mappers/reply.xml" />
 	</mappers>
 </configuration>

@@ -50,48 +50,30 @@
 		where rnum between #{startRow} and #{endRow}
 	</select>
 	
-	<resultMap type="prodVO" id="prodMap">
-		<result property="prod_id" column="PROD_ID"/>
-		<result property="prod_name" column="PROD_NAME"/>
-		<result property="prod_cost" column="PROD_COST"/>
-		<result property="prod_price" column="PROD_PRICE"/>
-		<result property="prod_outline" column="PROD_OUTLINE"/>
-	</resultMap>
+<!-- 	<resultMap type="prodVO" id="prodMap"> -->
+<!-- 		<result property="prod_id" column="PROD_ID"/> -->
+<!-- 		<result property="prod_name" column="PROD_NAME"/> -->
+<!-- 		<result property="prod_cost" column="PROD_COST"/> -->
+<!-- 		<result property="prod_price" column="PROD_PRICE"/> -->
+<!-- 		<result property="prod_outline" column="PROD_OUTLINE"/> -->
+<!-- 	</resultMap> -->
 	
-	<resultMap type="memberVO" id="memberMap" >
+	<resultMap type="memberVO" id="memberMap" autoMapping="true">
 		<!-- pk라는걸 mybatis에게 명시적으로 알려주는 용도로 id태그사용 -->
 		<id property="mem_id" column="MEM_ID"/>
-		<result property="mem_pass" column="MEM_PASS"/>
-		<result property="mem_name" column="MEM_NAME"/>
-		<result property="mem_regno1" column="MEM_REGNO1"/>
-		<result property="mem_regno2" column="MEM_REGNO2"/>
-		<result property="mem_bir" column="MEM_BIR"/>
-		<result property="mem_zip" column="MEM_ZIP"/>
-		<result property="mem_add1" column="MEM_ADD1"/>
-		<result property="mem_add2" column="MEM_ADD2"/>
-		<result property="mem_hometel" column="MEM_HOMETEL"/>
-		<result property="mem_comtel" column="MEM_COMTEL"/>
-		<result property="mem_hp" column="MEM_HP"/>
-		<result property="mem_mail" column="MEM_MAIL"/>
-		<result property="mem_job" column="MEM_JOB"/>
-		<result property="mem_like" column="MEM_LIKE"/>
-		<result property="mem_memorial" column="MEM_MEMORIAL"/>
-		<result property="mem_memorialday" column="MEM_MEMORIALDAY"/>
-		<result property="mem_mileage" column="MEM_MILEAGE"/>
-		<result property="mem_delete" column="MEM_DELETE"/>
-		<result property="mem_auth" column="MEM_AUTH"/>
 		<!-- 1:1관계 association태그 1:n 관계일때는 collection태그 -->
-		<collection property="prodList" resultMap="prodMap"/>
+<!-- 		javaType 구체적인 컬렉션타입 -->
+		<collection property="prodList" autoMapping="true" javaType="java.util.List" ofType="prodVO"/>
 	</resultMap>
 	
 	<!-- 동일한 xml안에있다면 namespace명 생략 가능 -->
 	<select id="selectMember" parameterType="string" resultMap="memberMap">
 		SELECT MEM_ID, MEM_PASS, MEM_NAME, MEM_REGNO1, MEM_REGNO2,
-		TO_CHAR(MEM_BIR,'YYYY-MM-DD') AS MEM_BIR, MEM_ZIP,
-		MEM_ADD1, MEM_ADD2, MEM_HOMETEL, MEM_COMTEL, MEM_HP, MEM_MAIL, MEM_JOB,
-		MEM_LIKE, MEM_MEMORIAL, TO_CHAR(MEM_MEMORIALDAY,'YYYY-MM-DD') AS
-		MEM_MEMORIALDAY, MEM_MILEAGE, MEM_DELETE, MEM_AUTH
-		,PROD_ID, PROD_NAME, PROD_COST, PROD_PRICE, PROD_OUTLINE
+			TO_CHAR(MEM_BIR,'YYYY-MM-DD') AS MEM_BIR, MEM_ZIP,
+			MEM_ADD1, MEM_ADD2, MEM_HOMETEL, MEM_COMTEL, MEM_HP, MEM_MAIL, MEM_JOB,
+			MEM_LIKE, MEM_MEMORIAL, TO_CHAR(MEM_MEMORIALDAY,'YYYY-MM-DD') AS
+			MEM_MEMORIALDAY, MEM_MILEAGE, MEM_DELETE, MEM_AUTH, MEM_IMG
+			,PROD_ID, PROD_NAME, PROD_COST, PROD_PRICE, PROD_OUTLINE
 		FROM MEMBER LEFT OUTER JOIN CART ON(CART_MEMBER = MEM_ID)
             		LEFT OUTER JOIN PROD ON (PROD_ID=CART_PROD)
 		WHERE MEM_ID=#{mem_id}
@@ -99,17 +81,17 @@
 	
 	<insert id="insertMember" parameterType="memberVO">
 		INSERT INTO MEMBER (
-		MEM_ID, MEM_PASS, MEM_NAME, MEM_REGNO1, MEM_REGNO2, MEM_BIR, MEM_ZIP,
-		MEM_ADD1,
-		MEM_ADD2, MEM_HOMETEL, MEM_COMTEL, MEM_HP, MEM_MAIL, MEM_JOB, MEM_LIKE,
-		MEM_MEMORIAL,
-		MEM_MEMORIALDAY, MEM_MILEAGE,MEM_AUTH
+			MEM_ID, MEM_PASS, MEM_NAME, MEM_REGNO1, MEM_REGNO2, MEM_BIR, MEM_ZIP,
+			MEM_ADD1,
+			MEM_ADD2, MEM_HOMETEL, MEM_COMTEL, MEM_HP, MEM_MAIL, MEM_JOB, MEM_LIKE,
+			MEM_MEMORIAL,
+			MEM_MEMORIALDAY, MEM_MILEAGE,MEM_AUTH, MEM_IMG
 		) VALUES (
-		#{mem_id}, #{mem_pass}, #{mem_name}, #{mem_regno1}, #{mem_regno2}, #{mem_bir},
-		#{mem_zip}, #{mem_add1},
-		#{mem_add2}, #{mem_hometel}, #{mem_comtel}, #{mem_hp}, #{mem_mail}, #{mem_job},
-		#{mem_like}, #{mem_memorial},
-		#{mem_memorialday}, 1000,'ROLE_USER'
+			#{mem_id}, #{mem_pass}, #{mem_name}, #{mem_regno1}, #{mem_regno2}, #{mem_bir},
+			#{mem_zip}, #{mem_add1},
+			#{mem_add2}, #{mem_hometel}, #{mem_comtel}, #{mem_hp}, #{mem_mail}, #{mem_job},
+			#{mem_like}, #{mem_memorial},
+			#{mem_memorialday}, 1000,'ROLE_USER', #{mem_img, jdbcType=BLOB}
 		)
 	</insert>
 	 
@@ -117,7 +99,6 @@
 		UPDATE
 		MEMBER
 		SET MEM_NAME=#{mem_name},
-		MEM_BIR=#{mem_bir},
 		MEM_ZIP=#{mem_zip},
 		MEM_ADD1=#{mem_add1},
 		MEM_ADD2=#{mem_add2},
@@ -128,7 +109,10 @@
 		MEM_JOB=#{mem_job},
 		MEM_LIKE=#{mem_like},
 		MEM_MEMORIAL=#{mem_memorial},
-		MEM_MEMORIALDAY=#{mem_memorialday}
+		MEM_MEMORIALDAY= TO_DATE(#{mem_memorialday}, 'YYYY-MM-DD')
+		<if test="mem_img != null">
+			, MEM_IMG=#{mem_img}
+		</if>
 		WHERE MEM_ID = #{mem_id}
 	</update>
 	

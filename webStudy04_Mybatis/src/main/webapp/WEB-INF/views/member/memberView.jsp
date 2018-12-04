@@ -22,6 +22,18 @@
    crossorigin="anonymous"></script>
 <script   src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"   integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
    crossorigin="anonymous"></script>
+   
+<style>
+	#imageArea{
+		width: 100px;
+		height: 200px;	
+		border: 1px solid black;
+	}
+	#imageArea>img{
+		width: 200%;
+		height: 100%;
+	}
+</style> 
   
 <script type="text/javascript">
 $(function(){
@@ -45,6 +57,24 @@ $(function(){
 			}
 		}
 	});
+	
+	var imageArea=$("#imageArea");
+	$('[name="mem_image"]').on("change", function(){
+		//prop-해당 엘리먼트가 가지고있는 프로퍼티중에서 뭔가를 찾게다는것
+		var files = $(this).prop("files");
+		if(!files) return;
+		for(var idx=0; idx<files.length; idx++){
+// 			console.log(files[idx]);
+			var reader = new FileReader();
+			reader.onloadend = function(event){//이벤트핸들러 갖다 붙이기
+// 				console.log(event.target.result);
+				var imgTag = new Image();
+				imgTag.src = event.target.result;
+				$("#imageArea").html(imgTag);
+			}
+			reader.readAsDataURL(files[idx]);
+		}		
+	});
 });
 
 </script>
@@ -57,13 +87,13 @@ $(function(){
 		<c:set var="mutable" value="true"/>
 	</c:if>
 </c:if>
-		<form name="delForm" method="post" action="<%= request.getContextPath()%>/member/memberDelete.do"> 
+		<form name="delForm" method="post" action="<%= request.getContextPath()%>/member/memberDelete.do" > 
  			<input type="hidden" name="mem_id" value="${member.mem_id }"/> 
  			<input type="hidden" name="mem_pass" /> 
  		</form> 
 
 <c:if test="${mutable }">		
-<form action = "<%=request.getContextPath()%>/member/memberUpdate.do" method="post">
+<form action = "${pageContext.request.contextPath }/member/memberUpdate.do" method="post" enctype="multipart/form-data">
 </c:if>
 <h4>회원정보 상세조회 및 수정폼</h4>
 	<div>
@@ -87,6 +117,17 @@ $(function(){
 				<th>주민번호1</th>
 				<td><input type="text" name="mem_regno1" value="${member.mem_regno1 }" disabled="disabled"/>
 					<span class="error">${errors.mem_regno1 }</span></td>
+			</tr>
+			<tr>
+				<th>이미지</th>
+				<td>
+					<input type="file" name="mem_image" accept="image/*"/>
+						<div id="imageArea">
+							<c:if test="${not empty member.mem_img }">
+									<img src="data:image/*;base64, ${member.mem_imgBase64}" />
+							</c:if>
+						</div>
+				</td>
 			</tr>
 			<tr>
 				<th>주민번호2</th>

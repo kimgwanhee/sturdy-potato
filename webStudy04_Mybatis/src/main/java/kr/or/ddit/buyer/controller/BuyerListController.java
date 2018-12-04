@@ -27,17 +27,16 @@ public class BuyerListController implements ICommandHandler{
 		String searchType = req.getParameter("searchType");
 		//doget dopost로 구분
 		
-		int currentPage = 1;
-		String page = req.getParameter("page");
-		if(StringUtils.isNotBlank(page)) {
+		int currentPage = 1; 
+		String page = req.getParameter("page");	
+		if(StringUtils.isNotBlank(page)) {//페이지가 있다면
 			currentPage = Integer.parseInt(page);
 		}
 		
-		PagingInfoVO<BuyerVO> pagingVO = new PagingInfoVO<BuyerVO>(5,2);
+		PagingInfoVO<BuyerVO> pagingVO = new PagingInfoVO<BuyerVO>(5,2); // 
 		pagingVO.setSearchWord(searchWord);
 		pagingVO.setSearchType(searchType);
 		pagingVO.setCurrentPage(currentPage);
-		
 		IBuyerService service = new BuyerServiceImpl();
 		long totalRecord = service.retrieveBuyerCount(pagingVO);
 		pagingVO.setTotalRecord(totalRecord);
@@ -46,10 +45,10 @@ public class BuyerListController implements ICommandHandler{
 		pagingVO.setDataList(buyerList);
 		
 		req.setAttribute("pagingVO", pagingVO);
+		
 //		if("get".equalsIgnoreCase(req.getMethod())) {
 //		}
 		String view = "buyer/buyerList";
 		return view;
 	}
-
 }

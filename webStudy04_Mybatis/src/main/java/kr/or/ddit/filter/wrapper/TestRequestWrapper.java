@@ -7,8 +7,6 @@ public class TestRequestWrapper extends HttpServletRequestWrapper {
 
 	public TestRequestWrapper(HttpServletRequest request) {
 		super(request);
-		
-		
 	}
 	
 	@Override

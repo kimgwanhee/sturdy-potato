@@ -1,21 +1,25 @@
 package kr.or.ddit.member.controller;
 
+import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.UUID;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.lang3.StringUtils;
 
 import kr.or.ddit.CommonException;
 import kr.or.ddit.ServiceResult;
+import kr.or.ddit.filter.wrapper.FileUploadRequestWrapper;
 import kr.or.ddit.member.service.IMemberService;
 import kr.or.ddit.member.service.MemberServiceImpl;
 import kr.or.ddit.mvc.ICommandHandler;
@@ -68,6 +72,17 @@ public class MemberInsertController implements ICommandHandler {// 여긴 하나
 		req.setAttribute("errors", errors);// 이 request안에있는값이 바뀌었다?
 		boolean valid = validate(member, errors);
 		if (valid) {
+			if(req instanceof FileUploadRequestWrapper) {
+				//이미지 데이타 뽑아내기 mem_image
+				FileItem fileItem = ((FileUploadRequestWrapper)req).getFileItem("mem_image");
+				if(fileItem != null) {
+					//바이트배열 찾아내기
+					//db에 넣기위해서 넘기는 member객체 안에 넣어주기
+					member.setMem_img(fileItem.get());
+				}
+				//마이바티스에선 insert쿼리 바뀌기 
+			}
+			
 			// 의존관계형성
 			IMemberService service = new MemberServiceImpl();
 			// 데이터 돌려주기?

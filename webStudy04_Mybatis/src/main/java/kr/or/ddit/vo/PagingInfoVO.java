@@ -67,7 +67,7 @@ public class PagingInfoVO<T> {
 		html.append("<ul class='pagination'>");
 		if(startPage > 1) {
 			html.append(String.format(pattern, "", (startPage-1),"이전"));
-		}
+	}
 		
 		if(endPage > totalPage) endPage = totalPage;
 		//next를 넣을거냐 말거냐 

@@ -1,5 +1,6 @@
 package kr.or.ddit.member.controller;
 
+import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
@@ -16,10 +17,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.lang3.StringUtils;
 
 import kr.or.ddit.CommonException;
 import kr.or.ddit.ServiceResult;
+import kr.or.ddit.filter.wrapper.FileUploadRequestWrapper;
 import kr.or.ddit.member.service.IMemberService;
 import kr.or.ddit.member.service.MemberServiceImpl;
 import kr.or.ddit.mvc.ICommandHandler;
@@ -71,6 +74,15 @@ public class MemberUpdateController implements ICommandHandler {
 		
 		//검증
 		if(valid) {
+			
+			if(req instanceof FileUploadRequestWrapper) {
+				FileItem fileitem = ((FileUploadRequestWrapper)req).getFileItem("mem_image");
+				
+				if(fileitem != null) {
+					member.setMem_img(fileitem.get());
+				}
+			}
+			
 			//4번5번 로직을 선택해서 컨텐츠확보
 			IMemberService service = new MemberServiceImpl();
 			ServiceResult result = service.modifyMember(member);
