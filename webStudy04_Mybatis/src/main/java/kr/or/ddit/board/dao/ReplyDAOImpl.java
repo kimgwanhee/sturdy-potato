@@ -43,8 +43,10 @@ public class ReplyDAOImpl implements IReplyDAO {
 
 	@Override
 	public ReplyVO selectReply(long rep_no) {
-		// TODO Auto-generated method stub
-		return null;
+		try (SqlSession session = sqlSessionFactory.openSession();) {
+			IReplyDAO mapper = session.getMapper(IReplyDAO.class);
+			return mapper.selectReply(rep_no);
+		}
 	}
 
 	@Override

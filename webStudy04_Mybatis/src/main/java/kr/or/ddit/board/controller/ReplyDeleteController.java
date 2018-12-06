@@ -51,7 +51,7 @@ public class ReplyDeleteController implements ICommandHandler {
 		
 		switch (result) {
 		case OK:
-			view = "redirect:/reply/replyList.do?bo_no"+reply.getBo_no();
+			view = "redirect:/reply/replyList.do?bo_no="+reply.getBo_no();
 			break;
 		case INVALIDPASSWORD:
 			errors.put("error", "true");
