@@ -3,6 +3,7 @@ package kr.or.ddit.board.service;
 import java.util.List;
 
 import kr.or.ddit.ServiceResult;
+import kr.or.ddit.board.BoardException;
 import kr.or.ddit.board.dao.BoardDAOImpl;
 import kr.or.ddit.board.dao.IBoardDAO;
 import kr.or.ddit.board.dao.IPdsDAO;
@@ -23,20 +24,22 @@ public class BoardServiceImpl implements IBoardService{
 
 	@Override
 	public long retriveBoardCount(PagingInfoVO<BoardVO> pagingVO) {
-		// TODO Auto-generated method stub
-		return 0;
+		return boardDAO.selectTotalRecord(pagingVO);
 	}
 
 	@Override
 	public List<BoardVO> retriveBoardList(PagingInfoVO<BoardVO> pagingVO) {
-		// TODO Auto-generated method stub
-		return null;
+		List<BoardVO> result =boardDAO.selectBoardList(pagingVO);
+		return result;
 	}
 
 	@Override
 	public BoardVO retriveBoard(long bo_no) {
-		// TODO Auto-generated method stub
-		return null;
+		BoardVO result = boardDAO.selectBoard(bo_no);
+		if(result == null) {
+			throw new BoardException();
+		}
+		return result;
 	}
 
 	@Override

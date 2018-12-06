@@ -1,8 +1,10 @@
+
 package kr.or.ddit.board.service;
 
 import java.util.List;
 
 import kr.or.ddit.ServiceResult;
+import kr.or.ddit.board.BoardException;
 import kr.or.ddit.board.dao.IReplyDAO;
 import kr.or.ddit.board.dao.ReplyDAOImpl;
 import kr.or.ddit.vo.PagingInfoVO;
@@ -13,20 +15,22 @@ public class ReplyServiceImpl implements IReplyService {
 
 	@Override
 	public ServiceResult createReply(ReplyVO reply) {
-		// TODO Auto-generated method stub
-		return null;
+		ServiceResult sr = ServiceResult.FAILED;
+		int result = replyDAO.insertReply(reply);
+		if (result > 0) {
+			sr = ServiceResult.OK;
+		}
+		return sr;
 	}
 
 	@Override
 	public long retriveReplyCount(PagingInfoVO<ReplyVO> pagingVO) {
-		// TODO Auto-generated method stub
-		return 0;
+		return replyDAO.selectTotalRecord(pagingVO);
 	}
 
 	@Override
 	public List<ReplyVO> retriveReplyList(PagingInfoVO<ReplyVO> pagingVO) {
-		// TODO Auto-generated method stub
-		return null;
+		return replyDAO.selectReplyList(pagingVO);
 	}
 
 	@Override
@@ -37,8 +41,19 @@ public class ReplyServiceImpl implements IReplyService {
 
 	@Override
 	public ServiceResult removeReply(ReplyVO reply) {
-		// TODO Auto-generated method stub
-		return null;
+		ServiceResult result = ServiceResult.FAILED;
+		ReplyVO checkVO = replyDAO.selectReply(reply.getRep_no());
+		if (checkVO == null) {
+			throw new BoardException();
+		}
+		if (reply.getRep_pass().equals(checkVO.getRep_pass())) {
+			int rowCount = replyDAO.deleteReply(reply.getRep_no());
+			if (rowCount > 0) {
+				result = ServiceResult.OK;
+			}
+		} else {
+			result = ServiceResult.INVALIDPASSWORD;
+		}
+		return result;
 	}
-
 }

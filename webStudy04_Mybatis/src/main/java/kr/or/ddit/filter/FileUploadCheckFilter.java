@@ -35,8 +35,10 @@ public class FileUploadCheckFilter implements Filter {
 			
 			//servletRequest는 HttpServletRequest를 포괄하고 있으므로 request값을 downcast해준다.
 			HttpServletRequest req = (HttpServletRequest)request;
+			
 			//파일 임계크기 지정
 			int sizeThreshold = 10240;
+			
 			//임시 저장소 지정
 			File repository = new File("d:/temp");
 			

@@ -2,4 +2,72 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="kr.or.ddit.board.dao.IBoardDAO">
 
+	<sql id="selectBoardFrag">
+		SELECT
+		    BO_NO,   BO_WRITER,   BO_PASS,   BO_IP,
+		    BO_MAIL,   BO_TITLE,   BO_CONTENT,   BO_DATE,
+		    BO_HIT,   BO_RCMD
+		FROM
+		    BOARD
+	</sql>
+
+	<sql id="searchFrag">
+		<where>
+			<if test="@org.apache.commons.lang3.StringUtils@isNotBlank(searchWord)">
+				<if test="searchType.equals('writer')" >
+					BO_WRITER LIKE '%'||#{searchWord}||'%'
+				</if>
+				<if test="searchType.equals('title')">
+					BO_TITLE like '%'||#{searchWord}||'%'
+				</if>
+				<if test="searchType.equals('content')">
+					BO_CONTENT LIKE '%'||#{searchWord}||'%'
+				</if>
+				<if test="searchType.equals('all')">
+					BO_WRITER LIKE '%'||#{searchWord}||'%'
+					OR
+					bo_title LIKE '%'||#{searchWord}||'%'
+					OR
+					BO_CONTENT LIKE '%'||#{searchWord}||'%'
+				</if>
+			</if>
+		</where>
+	</sql>
+
+	<select id="selectBoardList" resultType="boardVO" parameterType="pagingVO">
+      SELECT B.*
+         FROM( SELECT ROWNUM AS RNUM, A.*
+                  FROM ( SELECT BOARD.* 
+                            FROM BOARD
+                            ORDER BY ROWID DESC) A 
+               <include refid="kr.or.ddit.board.dao.IBoardDAO.searchFrag"/>      
+                            ) b
+<!--            <![CDATA[ -->
+<!--               WHERE RNUM >=1 AND RNUM <=10 -->
+<!--            ]]> -->
+           WHERE RNUM BETWEEN #{startRow} AND #{endRow}
+	</select>
+  	
+  	<select id="selectTotalRecord" resultType="long"
+		parameterType="pagingVO">
+		select count(*) from board
+		<include refid="kr.or.ddit.board.dao.IBoardDAO.searchFrag" />
+	</select>
+	
+	<resultMap type="boardVO" id="boardMap" autoMapping="true">
+		<id property="bo_no" column="BO_NO"/>
+		<collection property="replyList"  autoMapping="true" javaType="java.util.List" ofType="replyVO"/>
+	</resultMap>
+	
+	<select id="selectBoard" parameterType="long" resultMap="boardMap" >
+		SELECT
+		    BO_NO, BO_WRITER, BO_PASS, BO_IP,
+		    BO_MAIL, BO_TITLE, BO_CONTENT, BO_DATE,
+		    BO_HIT, BO_RCMD
+		FROM  BOARD
+	    WHERE BO_NO = #{bo_no}
+	</select>	
+	
+	
+  	
 </mapper>

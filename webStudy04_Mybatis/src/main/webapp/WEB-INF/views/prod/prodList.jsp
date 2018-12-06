@@ -62,11 +62,14 @@
 				dataType:"json",//공통표현방식? ? ? ? ? ? ? ? ? ? ? ? ? ? ?
 // 				data:{//page prodlgu prodbuyer proname  4개 가지고감//이 값들은 아래에있는 searchform에서 어떤값들을 가지고있냐에따라 달라짐
 // 				},
+
+				//보내는 정보
+				
 				success:function(resp){//resp 는 json데이타가 언마샬링되어있는..?
 					var prodList = resp.dataList;
 					var html="";
 					if(prodList){
-						$.each(prodList, function(idx, prod){
+						$.each(prodList, function(idx,prod){
 							html += "<tr>";
 							html += "<td>"+prod.prod_id+"</td>";
 							html += "<td>"+prod.prod_name+"</td>";
@@ -77,6 +80,7 @@
 							html += "<td>"+prod.prod_mileage+"</td>";
 							html += "</tr>";
 						});
+						
 					}else{
 						html+="<tr><td colspan = '7'> 상품이 없음. </td></tr>";
 					}

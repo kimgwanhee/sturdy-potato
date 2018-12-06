@@ -57,11 +57,12 @@ public class ProdListController implements ICommandHandler {
 //		service.retrieveProdList(pagingVO);
 		//5. 로직을 돌려주는 데이타를 갖고 
 		long totalRecord = service.retrieveProdCount(pagingVO);
-		pagingVO.setTotalPage(totalRecord);
+		pagingVO.setTotalRecord(totalRecord);
 		List<ProdVO> prodList = service.retrieveProdList(pagingVO);
 		pagingVO.setDataList(prodList);
 		
 		String accept = req.getHeader("Accept");
+		//application/json, text/javascript, */*; q=0.01
 		if(StringUtils.containsIgnoreCase(accept, "json")) {
 			//JSON
 			resp.setContentType(Mime.JSON.contentType);

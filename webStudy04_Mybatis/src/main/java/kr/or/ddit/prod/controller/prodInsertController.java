@@ -105,7 +105,9 @@ public class prodInsertController implements ICommandHandler {
 	}
 	
 	private boolean validate(ProdVO prod, Map<String, String> errors) {
+		
 		boolean vaild = true;
+		
 		if(prod.getProd_cost() == null || prod.getProd_cost() <0){
 			vaild = false;
 			errors.put("prod_cost", "비용 누락");

@@ -2,34 +2,43 @@ package kr.or.ddit.board.dao;
 
 import java.util.List;
 
+import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 
 import kr.or.ddit.mybatis.CustomSqlSessionFactoryBuilder;
-import kr.or.ddit.vo.BoardVO;
 import kr.or.ddit.vo.PagingInfoVO;
 import kr.or.ddit.vo.ReplyVO;
 
 public class ReplyDAOImpl implements IReplyDAO {
-	
-	SqlSessionFactory sqlSessionFactory = 
-			CustomSqlSessionFactoryBuilder.getSqlSessionFactory();
+
+	SqlSessionFactory sqlSessionFactory = CustomSqlSessionFactoryBuilder.getSqlSessionFactory();
 
 	@Override
 	public int insertReply(ReplyVO reply) {
-		// TODO Auto-generated method stub
-		return 0;
+		try (SqlSession session = sqlSessionFactory.openSession();) {
+			IReplyDAO mapper = session.getMapper(IReplyDAO.class);
+			int rowCount = mapper.insertReply(reply);
+			if (rowCount > 0) {
+				session.commit();
+			}
+			return rowCount;
+		}
 	}
 
 	@Override
 	public long selectTotalRecord(PagingInfoVO<ReplyVO> pagingVO) {
-		// TODO Auto-generated method stub
-		return 0;
+		try (SqlSession session = sqlSessionFactory.openSession();) {
+			IReplyDAO result = session.getMapper(IReplyDAO.class);
+			return result.selectTotalRecord(pagingVO);
+		}
 	}
 
 	@Override
 	public List<ReplyVO> selectReplyList(PagingInfoVO<ReplyVO> pagingVO) {
-		// TODO Auto-generated method stub
-		return null;
+		try (SqlSession session = sqlSessionFactory.openSession();) {
+			IReplyDAO mapper = session.getMapper(IReplyDAO.class);
+			return mapper.selectReplyList(pagingVO);
+		}
 	}
 
 	@Override
@@ -46,10 +55,13 @@ public class ReplyDAOImpl implements IReplyDAO {
 
 	@Override
 	public int deleteReply(long rep_no) {
-		// TODO Auto-generated method stub
-		return 0;
+		try (SqlSession session = sqlSessionFactory.openSession();) {
+			IReplyDAO mapper = session.getMapper(IReplyDAO.class);
+			int rowCount = mapper.deleteReply(rep_no);
+			if (rowCount > 0)
+				session.commit();
+			return rowCount;
+		}
 	}
-
-	
 
 }

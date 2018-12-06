@@ -34,5 +34,6 @@ public class CommonException extends RuntimeException {
 	public CommonException(Throwable cause) {
 		super(cause);
 	}
+	
 
 }

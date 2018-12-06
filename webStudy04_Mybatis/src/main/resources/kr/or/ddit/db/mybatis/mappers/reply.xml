@@ -1,5 +1,50 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="kr.or.ddit.board.dao.IReplyDAO">
+	<select id="selectTotalRecord" parameterType="pagingVO"
+		resultType="long">
+		SELECT COUNT(*)
+		FROM REPLY
+		WHERE BO_NO = #{searchVO.bo_no}
+	</select>
 
+	<select id="selectReplyList" parameterType="pagingVO"
+		resultType="replyVO">
+		SELECT B.*
+		FROM(
+		SELECT A.*, ROWNUM RNUM
+		FROM (
+		SELECT BO_NO,
+		REP_NO, REP_WRITER, REP_IP, REP_CONTENT, REP_DATE
+		FROM REPLY
+		WHERE BO_NO
+		= #{searchVO.bo_no}
+		ORDER BY REP_NO DESC ) A ) B
+		WHERE RNUM BETWEEN
+		#{startRow} AND #{endRow}
+	</select>
+
+	<insert id="insertReply" parameterType="replyVO">
+		<selectKey order="BEFORE" keyProperty="rep_no" resultType="Long">
+			SELECT REPLY_SEQ.NEXTVAL FROM DUAL			
+<!-- 			SELECT NVL(MAX(REP_NO),0)+1 FROM REPLY	 -->
+		</selectKey>
+		INSERT INTO REPLY (
+			REP_NO, BO_NO,	REP_WRITER,
+			REP_IP,	REP_PASS,	REP_CONTENT,
+			REP_DATE
+		) VALUES (
+			#{rep_no},	#{bo_no},	#{rep_writer},
+			#{rep_ip},	#{rep_pass},	#{rep_content},
+			sysdate
+		)
+	</insert> 
+	
+	<select id="selectReply" parameterType="long" resultType="replyVO">
+		SELECT * FROM REPLY WHERE REP_NO = #{rep_no}
+	</select>
+	
+	<delete id="deleteReply" parameterType="long">
+		DELETE FROM REPLY WHERE REP_NO=#{rep_no}
+	</delete>
 </mapper>
