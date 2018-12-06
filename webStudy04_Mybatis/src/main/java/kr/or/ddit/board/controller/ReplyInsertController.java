@@ -1,6 +1,8 @@
 package kr.or.ddit.board.controller;
 
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import javax.servlet.ServletException;
@@ -9,11 +11,14 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import kr.or.ddit.ServiceResult;
 import kr.or.ddit.board.service.IReplyService;
 import kr.or.ddit.board.service.ReplyServiceImpl;
 import kr.or.ddit.mvc.ICommandHandler;
 import kr.or.ddit.vo.ReplyVO;
+import kr.or.ddit.web.calculate.Mime;
 
 public class ReplyInsertController implements ICommandHandler {
 
@@ -32,8 +37,9 @@ public class ReplyInsertController implements ICommandHandler {
 		replyVO.setBo_no(Long.parseLong(bo_no));
 		replyVO.setRep_ip(req.getLocalAddr());
 		
+		Map<String, String> errors = new LinkedHashMap<>();
 		req.setAttribute("replyVO", replyVO);
-		boolean valid = true;
+		boolean valid = validate(replyVO, errors);
 		String goPage = null;
 		
 		//등록 성공 
@@ -48,11 +54,22 @@ public class ReplyInsertController implements ICommandHandler {
 				goPage = "redirect:/reply/replyList.do?bo_no="+bo_no;
 				break;
 			case FAILED:
-				goPage = "board/boardView";
+				errors.put("message","서버오류");
+				errors.put("error","true");
 				break;
 			}
 		}else {
-			goPage = "board/boardView";
+			errors.put("error","true");
+			errors.put("message","검증오류");
+		}
+		if(errors.size() >0 ) {
+			resp.setContentType(Mime.JSON.getContentType());
+			ObjectMapper mapper = new ObjectMapper();
+			try(
+					PrintWriter out = resp.getWriter();
+			){
+				mapper.writeValue(out, errors);
+			}
 		}
 		return goPage;
 	}

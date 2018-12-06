@@ -51,8 +51,16 @@ public class ReplyDAOImpl implements IReplyDAO {
 
 	@Override
 	public int updateReply(ReplyVO reply) {
-		// TODO Auto-generated method stub
-		return 0;
+		try(
+				SqlSession session = sqlSessionFactory.openSession();
+		){
+			IReplyDAO mapper =session.getMapper(IReplyDAO.class);
+			int rowCount = mapper.updateReply(reply);
+			if(rowCount>0) {
+				session.commit();
+			}
+			return rowCount;
+		}
 	}
 
 	@Override

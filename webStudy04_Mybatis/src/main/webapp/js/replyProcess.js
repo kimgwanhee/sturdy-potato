@@ -4,9 +4,7 @@
 
 function replyListMaker(resp) {
 		if (resp.error) {
-			if (resp.error ) {
 				alert(resp.message);
-			}
 		} else {	//등록성공
 			var html = "";
 			if (resp.dataList) {

@@ -25,26 +25,37 @@
 	</select>
 
 	<insert id="insertReply" parameterType="replyVO">
-		<selectKey order="BEFORE" keyProperty="rep_no" resultType="Long">
-			SELECT REPLY_SEQ.NEXTVAL FROM DUAL			
-<!-- 			SELECT NVL(MAX(REP_NO),0)+1 FROM REPLY	 -->
+		<selectKey order="BEFORE" keyProperty="rep_no"
+			resultType="Long">
+			SELECT REPLY_SEQ.NEXTVAL FROM DUAL
+			<!-- SELECT NVL(MAX(REP_NO),0)+1 FROM REPLY -->
 		</selectKey>
 		INSERT INTO REPLY (
-			REP_NO, BO_NO,	REP_WRITER,
-			REP_IP,	REP_PASS,	REP_CONTENT,
-			REP_DATE
+		REP_NO, BO_NO, REP_WRITER,
+		REP_IP, REP_PASS, REP_CONTENT,
+		REP_DATE
 		) VALUES (
-			#{rep_no},	#{bo_no},	#{rep_writer},
-			#{rep_ip},	#{rep_pass},	#{rep_content},
-			sysdate
+		#{rep_no}, #{bo_no}, #{rep_writer},
+		#{rep_ip}, #{rep_pass}, #{rep_content},
+		sysdate
 		)
-	</insert> 
-	
-	<select id="selectReply" parameterType="long" resultType="replyVO">
+	</insert>
+
+	<select id="selectReply" parameterType="long"
+		resultType="replyVO">
 		SELECT * FROM REPLY WHERE REP_NO = #{rep_no}
 	</select>
-	
+
 	<delete id="deleteReply" parameterType="long">
-		DELETE FROM REPLY WHERE REP_NO=#{rep_no}
+		DELETE FROM REPLY WHERE
+		REP_NO=#{rep_no}
 	</delete>
+
+	<update id="updateReply" parameterType="replyVO">
+		UPDATE REPLY
+		SET
+		REP_CONTENT = #{rep_content}
+		WHERE
+		REP_NO = #{rep_no}
+	</update>
 </mapper>

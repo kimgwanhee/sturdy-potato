@@ -3,6 +3,8 @@ package kr.or.ddit.board.service;
 
 import java.util.List;
 
+import javax.naming.spi.DirStateFactory.Result;
+
 import kr.or.ddit.ServiceResult;
 import kr.or.ddit.board.BoardException;
 import kr.or.ddit.board.dao.IReplyDAO;
@@ -35,8 +37,20 @@ public class ReplyServiceImpl implements IReplyService {
 
 	@Override
 	public ServiceResult modifyReply(ReplyVO reply) {
-		// TODO Auto-generated method stub
-		return null;
+		ServiceResult sr = ServiceResult.FAILED;
+		ReplyVO checkVO = replyDAO.selectReply(reply.getRep_no());
+		if(checkVO == null) {
+			throw new BoardException();
+		}
+		if(reply.getRep_no().equals(checkVO.getRep_no())) {
+			int rowCount = replyDAO.updateReply(reply);
+			if(rowCount >0) {
+				sr = ServiceResult.OK;
+			}
+		}else {
+			sr = ServiceResult.INVALIDPASSWORD;
+		}
+		return sr;
 	}
 
 	@Override
