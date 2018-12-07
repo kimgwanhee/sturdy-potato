@@ -2,7 +2,8 @@
  * 게시글 상세조회의 덧글 처리
  */
 
-function replyListMaker(resp) {
+
+function replyListMaker(resp) {//resp라는 변수로 받아온것
 		if (resp.error) {
 				alert(resp.message);
 		} else {	//등록성공
@@ -38,15 +39,15 @@ function pagingReply(page, bo_no) {//여기선 덧글에 대해서만 페이징�
 				page : page
 			//위랑 두개의 데이터를 가지고 요청발생
 			},
-			dataType : "json",
+			dataType : "json",//zip파일이라고 생각..
+			
+			//여기서부터는 응답받기
 			success : replyListMaker,
 			error : function(resp) {//에러도 하나의 응답이니깐 resp로..
 				console.log(resp.status);
 			}
 		});
 	}
-	
-	
 
 	$(function() {
 		pagingArea = $("#pagingArea");
@@ -78,7 +79,7 @@ function pagingReply(page, bo_no) {//여기선 덧글에 대해서만 페이징�
 			delModal.modal("hide");
 		});
 		
-		
+		//ajaxForm - event.preventDefault();이게 자동으로 있음 , form에 있는 데이타를 자동으로 직렬화 마샬링
 		replyForm.ajaxForm({//ajaxForm 동기요청을 비동기로바꿈
 			dataType : 'json',
 			success :replyListMaker,
