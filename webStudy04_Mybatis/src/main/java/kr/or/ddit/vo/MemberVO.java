@@ -7,6 +7,9 @@ import java.util.Objects;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.ibatis.type.Alias;
 
+import kr.or.ddit.validator.InsertGroup;
+import kr.or.ddit.validator.rules.constraints.Length;
+import kr.or.ddit.validator.rules.constraints.NotBlank;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -24,18 +27,27 @@ public class MemberVO implements Serializable{
 		this.mem_pass = mem_pass;
 	}
 	
-	
+	@NotBlank(message="아이디 필수")
 	private String mem_id;
+	@NotBlank(message="비밀번호 필수")
+	@Length(min=4, max=8)
 	private String mem_pass;
+	@NotBlank(message="이름 필수", groups = InsertGroup.class)
 	private String mem_name;
+	@NotBlank(groups=InsertGroup.class)
 	private String mem_regno1;
+	@NotBlank(groups=InsertGroup.class)
 	private String mem_regno2;
 	private String mem_bir;
+	@NotBlank
 	private String mem_zip;
+	@NotBlank
 	private String mem_add1;
+	@NotBlank
 	private String mem_add2;
 	private String mem_hometel;
 	private String mem_comtel;
+	@NotBlank
 	private String mem_hp;
 	private String mem_mail;
 	private String mem_job;

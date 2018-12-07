@@ -6,7 +6,9 @@ public enum Mime {
 	PLAIN("text/plain;charset=UTF-8"),
 	HTML("text/html;charset=UTF-8"),
 	XML("application/xml;charset=UTF-8"),
-	JSON("application/json;charset=UTF-8");
+	JSON("application/json;charset=UTF-8"),
+	OCTET("application/octet-stream;charset=UTF-8");
+	
 
 	//상수값을 얻어올수 있는 변수선언
 	public String contentType;

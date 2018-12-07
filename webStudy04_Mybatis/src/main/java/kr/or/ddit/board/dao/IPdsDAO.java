@@ -1,5 +1,8 @@
 package kr.or.ddit.board.dao;
 
+import org.apache.ibatis.session.SqlSession;
+
+import kr.or.ddit.vo.BoardVO;
 import kr.or.ddit.vo.PdsVO;
 
 /**
@@ -23,6 +26,14 @@ public interface IPdsDAO {
 	 * @return row count
 	 */
 	public int insertPds(PdsVO pds);
+	
+	/**
+	 * 여러건의 첨부파일을 한번의 insert 쿼리로 삽입
+	 * @param board TODO
+	 * @param session TODO
+	 * @return
+	 */
+	public int insertPdsList(BoardVO board, SqlSession session);
 	
 	/**
 	 * 다운로드용으로 사용될 조회 메소드

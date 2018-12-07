@@ -117,7 +117,15 @@
   	<artifactId>commons-codec</artifactId>
   	<version>1.11</version>
   </dependency>
+  <dependency>
+  	<groupId>kr.or.ddit</groupId>
+  	<artifactId>myValidator</artifactId>
+  	<version>1.0</version>
+  </dependency>
+  
+  
 </dependencies>
+
 <repositories>
 	<repository>
 	    <id>oracle</id>

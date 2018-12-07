@@ -6,6 +6,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -23,6 +24,8 @@ import kr.or.ddit.filter.wrapper.FileUploadRequestWrapper;
 import kr.or.ddit.member.service.IMemberService;
 import kr.or.ddit.member.service.MemberServiceImpl;
 import kr.or.ddit.mvc.ICommandHandler;
+import kr.or.ddit.validator.GeneralValidator;
+import kr.or.ddit.validator.InsertGroup;
 import kr.or.ddit.vo.MemberVO;
 
 public class MemberInsertController implements ICommandHandler {// 여긴 하나의 주소로 두개의 메서드 문제가됨..->
@@ -52,7 +55,7 @@ public class MemberInsertController implements ICommandHandler {// 여긴 하나
 		// 로직과의 의존관계형성
 		// MemberInsert.jsp에서 가져옴
 		MemberVO member = new MemberVO();// 커맨더 오브젝트
-		req.setAttribute("member", member);//foward방식에서 요청정보 남아있어야하므로 ..
+		req.setAttribute("member", member);// foward방식에서 요청정보 남아있어야하므로 ..
 
 //		member.setMem_id(req.getParameter("mem_id"));
 
@@ -60,34 +63,36 @@ public class MemberInsertController implements ICommandHandler {// 여긴 하나
 //	<jsp:setProperty name="member" property="*" ></jsp:setProperty> //member.setMem_id(req.getParameter("mem_id"));을 대신해주는것
 		try {
 			BeanUtils.populate(member, req.getParameterMap());
-		} catch (IllegalAccessException | InvocationTargetException e) {//IllegalAccessException 잘못된 접근 //InvocationTargetException는 vo에 set을 안해줘서
+		} catch (IllegalAccessException | InvocationTargetException e) {// IllegalAccessException 잘못된 접근
+																		// //InvocationTargetException는 vo에 set을 안해줘서
 			throw new CommonException(e);
 		}
 
 		// 검증
 		String goPage = null;
 		String message = null;
-		
-		Map<String, String> errors = new LinkedHashMap<>();
+
+		Map<String, List<CharSequence>> errors = new LinkedHashMap<>();
 		req.setAttribute("errors", errors);// 이 request안에있는값이 바뀌었다?
-		boolean valid = validate(member, errors);
+		GeneralValidator validator = new GeneralValidator();
+		boolean valid = validator.validate(member, errors, InsertGroup.class);
 		if (valid) {
-			if(req instanceof FileUploadRequestWrapper) {
-				//이미지 데이타 뽑아내기 mem_image
-				FileItem fileItem = ((FileUploadRequestWrapper)req).getFileItem("mem_image");
-				if(fileItem != null) {
-					//바이트배열 찾아내기
-					//db에 넣기위해서 넘기는 member객체 안에 넣어주기
+			if (req instanceof FileUploadRequestWrapper) {
+				// 이미지 데이타 뽑아내기 mem_image
+				FileItem fileItem = ((FileUploadRequestWrapper) req).getFileItem("mem_image");
+				if (fileItem != null) {
+					// 바이트배열 찾아내기
+					// db에 넣기위해서 넘기는 member객체 안에 넣어주기
 					member.setMem_img(fileItem.get());
 				}
-				//마이바티스에선 insert쿼리 바뀌기 
+				// 마이바티스에선 insert쿼리 바뀌기
 			}
-			
+
 			// 의존관계형성
 			IMemberService service = new MemberServiceImpl();
 			// 데이터 돌려주기?
 			ServiceResult result = service.registMember(member);
-			
+
 			switch (result) {
 			case PKDUPLICATED:
 				goPage = "member/memberForm";
@@ -106,51 +111,6 @@ public class MemberInsertController implements ICommandHandler {// 여긴 하나
 			goPage = "member/memberForm";
 		}
 		return goPage;
-	}
-
-	private boolean validate(MemberVO member, Map<String, String> errors) {// 콜바이레퍼런스..?- 검증하려고 따로 뺀 메서드
-		boolean valid = true;
-		// 검증 룰
-		if (StringUtils.isBlank(member.getMem_id())) {
-			valid = false;
-			errors.put("mem_id", "회원아이디누락");
-		}
-		if (StringUtils.isBlank(member.getMem_pass())) {
-			valid = false;
-			errors.put("mem_pass", "비밀번호누락");
-		}
-		if (StringUtils.isBlank(member.getMem_name())) {
-			valid = false;
-			errors.put("mem_name", "회원명누락");
-		}
-		if (StringUtils.isBlank(member.getMem_zip())) {
-			valid = false;
-			errors.put("mem_zip", "우편번호누락");
-		}
-		if (StringUtils.isBlank(member.getMem_add1())) {
-			valid = false;
-			errors.put("mem_add1", "주소1누락");
-		}
-		if (StringUtils.isBlank(member.getMem_add2())) {
-			valid = false;
-			errors.put("mem_add2", "주소2누락");
-		}
-		if (StringUtils.isBlank(member.getMem_mail())) {
-			valid = false;
-			errors.put("mem_mail", "이메일누락");
-		}
-		if (StringUtils.isNotBlank(member.getMem_bir())) {
-			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-			// formatting : 특정 타입의 데이터를 일정 형식의 문자열로 변환.
-			// parsing의 차이점.. : 일정한 형식의 문자열을 특정 타입의 데이터로 변환.
-			try {				
-				formatter.parse(member.getMem_bir());
-			} catch (ParseException e) {
-				valid = false;
-				errors.put("mem_bir", "날짜 형식 확인");
-			}
-		}
-		return valid;
 	}
 
 }
