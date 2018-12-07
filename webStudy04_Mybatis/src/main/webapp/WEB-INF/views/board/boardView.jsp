@@ -68,6 +68,18 @@
 					<td>${board.bo_content}</td>
 				</tr>
 				<tr>
+					<th>PDS_FILE</th>
+					<td>
+						<c:forEach items="${board.pdsList}" var="pds" varStatus="vs">
+							<c:url value="/board/download.do" var="downloadURL">
+								<c:param name="what" value="${pds.pds_no}"></c:param>
+							</c:url>
+							<a href = "${downloadURL}">${pds.pds_filename} </a>
+							<c:if test="${not vs.last}">&nbsp;|</c:if>
+						</c:forEach>
+					</td>
+				</tr>
+				<tr>
 					<th>BO_DATE</th>
 					<td>${board.bo_date}</td>
 				</tr>

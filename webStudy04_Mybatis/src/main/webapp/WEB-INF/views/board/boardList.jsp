@@ -47,6 +47,7 @@ $(function(){
 		
 		<input type="text" name="searchWord" value="${pagingVO.searchWord}" />
 		<input type="submit" value="검색">
+		<input type="button" value="새글쓰기" onclick="location.href='${pageContext.request.contextPath}/board/boardInsert.do';">
 		<input type="hidden" name="page"/>
 	</form>
 

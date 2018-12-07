@@ -55,7 +55,6 @@ public class AuthenticationFilter implements Filter {
 			//이제 맵에넣기
 			securedResources.put(uri.trim(), auth);
 		}
-		
 	}
 
 	@Override

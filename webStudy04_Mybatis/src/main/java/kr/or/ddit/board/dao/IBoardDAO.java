@@ -2,6 +2,8 @@ package kr.or.ddit.board.dao;
 
 import java.util.List;
 
+import org.apache.ibatis.session.SqlSession;
+
 import kr.or.ddit.vo.BoardVO;
 import kr.or.ddit.vo.PagingInfoVO;
 
@@ -23,9 +25,10 @@ public interface IBoardDAO {
 	/**
 	 * 게시글 작성
 	 * @param board
+	 * @param session TODO
 	 * @return
 	 */
-	public int insertBoard(BoardVO board);
+	public int insertBoard(BoardVO board, SqlSession session);
 	
 	/**
 	 * 검색과 페이징 처리를 위해 검색조건에 맞는 게시글 수 조회

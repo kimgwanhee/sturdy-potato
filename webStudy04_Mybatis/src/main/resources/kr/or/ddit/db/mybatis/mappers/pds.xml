@@ -2,4 +2,40 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="kr.or.ddit.board.dao.IPdsDAO">
 
+	<insert id="insertPds" parameterType="pdsVO">
+		<selectKey order="BEFORE" keyProperty="pds_no" resultType="Long">
+				SELECT PDS_SEQ.NEXTVAL FROM DUAL
+			</selectKey>
+			INSERT INTO PDS (
+			    PDS_NO,   BO_NO,  PDS_FILENAME,   PDS_SAVENAME,
+			    PDS_MIME,   PDS_SIZE,   PDS_FANCYSIZE
+			) VALUES (
+			    #{pds_no},   #{bo_no},   #{pds_filename},   #{pds_savename},
+			    #{pds_mime},   #{pds_size},   #{pds_fancysize}
+			)
+	</insert>
+	
+	<insert id="insertPdsList" parameterType="boardVO">
+		INSERT INTO PDS
+		(
+		    PDS_NO,   BO_NO,  PDS_FILENAME,   PDS_SAVENAME,
+		    PDS_MIME,   PDS_SIZE,   PDS_FANCYSIZE
+		)
+		SELECT PDS_SEQ.NEXTVAL, A.*
+		FROM (
+		<foreach collection="pdsList" item ="pds" index="idx" separator=" UNION ALL ">
+			    SELECT    #{bo_no},   #{pds.pds_filename},   #{pds.pds_savename},
+			    	#{pds.pds_mime},   #{pds.pds_size},   #{pds.pds_fancysize}
+			    FROM DUAL
+		</foreach>
+		)A
+	</insert>
+	
+	<select id="selectPds" parameterType="long" resultType="pdsVO">
+		SELECT PDS_NO,   BO_NO,  PDS_FILENAME,   PDS_SAVENAME,
+			    PDS_MIME,   PDS_SIZE,   PDS_FANCYSIZE 
+		FROM PDS WHERE PDS_NO = #{pds_no}
+	
+	</select>
+
 </mapper>

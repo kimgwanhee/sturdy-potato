@@ -1,8 +1,14 @@
 package kr.or.ddit.vo;
 
+import java.io.File;
+import java.io.InputStream;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.io.FileUtils;
 import org.apache.ibatis.type.Alias;
 
 import lombok.Data;
@@ -28,4 +34,16 @@ public class BoardVO implements Serializable{
 	private List<PdsVO> pdsList;
 	private List<ReplyVO> replyList;
 
+	private List<FileItem> itemList;
+	
+	public void setItemList(List<FileItem> fileitems) {
+		this.itemList = fileitems;
+		List<PdsVO> pdsList = new ArrayList<>();
+		for (FileItem fileItem : fileitems) {
+			if (fileItem != null) {
+				pdsList.add(new PdsVO(fileItem));//객체는 주소를 참조해서 상관x
+			}
+			this.pdsList = pdsList;
+		}
+	}
 }
