@@ -1,6 +1,7 @@
 package kr.or.ddit.buyer.controller;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -9,11 +10,14 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import kr.or.ddit.buyer.service.BuyerServiceImpl;
 import kr.or.ddit.buyer.service.IBuyerService;
 import kr.or.ddit.mvc.ICommandHandler;
 import kr.or.ddit.vo.BuyerVO;
 import kr.or.ddit.vo.PagingInfoVO;
+import kr.or.ddit.web.calculate.Mime;
 
 public class BuyerListController implements ICommandHandler{
 
@@ -45,10 +49,26 @@ public class BuyerListController implements ICommandHandler{
 		pagingVO.setDataList(buyerList);
 		
 		req.setAttribute("pagingVO", pagingVO);
-		
-//		if("get".equalsIgnoreCase(req.getMethod())) {
-//		}
-		String view = "buyer/buyerList";
-		return view;
+		String accept = req.getHeader("Accept");
+		//application/json, text/javascript, */*; q=0.01
+		if(StringUtils.containsIgnoreCase(accept, "json")) {
+			//JSON
+			resp.setContentType(Mime.JSON.contentType);
+			ObjectMapper mapper = new ObjectMapper();
+			//자바를 json으로 바꾸려면 마샬링
+			
+			
+			try(
+			PrintWriter out = resp.getWriter();
+			){
+			mapper.writeValue(out, pagingVO);
+			}
+			return null;
+		}else{
+			//HTML
+			req.setAttribute("pagingVO", pagingVO);
+			
+			return "buyer/buyerList";
+		}
 	}
 }

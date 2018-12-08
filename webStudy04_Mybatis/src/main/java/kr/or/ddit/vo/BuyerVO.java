@@ -1,8 +1,12 @@
 package kr.or.ddit.vo;
 
 import java.io.Serializable;
+import java.util.List;
 
 import org.apache.ibatis.type.Alias;
+
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * 자바빈 : Java beans 규약에 따라 재사용 가능한 객체들.
@@ -17,6 +21,8 @@ import org.apache.ibatis.type.Alias;
  * 
  */
 @Alias("buyerVO")
+@Data
+@NoArgsConstructor
 public class BuyerVO implements Serializable{
 
 	private String buyer_id;
@@ -33,6 +39,8 @@ public class BuyerVO implements Serializable{
 	private String buyer_mail;
 	private String buyer_charger;
 	private String buyer_telext;
+	
+	private List<ProdVO> prodList;
 	
 	@Override
 	public String toString() {

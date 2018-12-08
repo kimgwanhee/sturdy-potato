@@ -12,12 +12,52 @@
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery-3.3.1.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+<script src="http://malsup.github.com/jquery.form.js"></script> 
 
 <script type="text/javascript">
-function ${pagingVO.funcName}(d){
-	document.searchForm.page.value = d;
-	document.searchForm.submit();
-}
+	function ${pagingVO.funcName}(page){
+		searchForm.find("[name='page']").val(page);
+		searchForm.submit();//함수 호출하고 submit 
+	// 	document.searchForm.page.value = d;
+	// 	document.searchForm.submit();
+	}
+	
+	function createBody(paging){
+		var buyerList = paging.dataList;
+		var html="";
+		if(buyerList){
+			$.each(buyerList, function(idx,buyer){
+				html += "<tr>";
+				html += "<td>"+buyer.buyer_id+"</td>";
+				html += "<td><a href='${pageContext.request.contextPath}/buyer/buyerView.do?who="+buyer.buyer_id+"'>"+buyer.buyer_name+"</a></td>";
+				html += "<td>"+buyer.buyer_zip+"</td>";
+				html += "<td>"+buyer.buyer_add1 + buyer.buyer_add2+"</td>";
+				html += "<td>"+buyer.buyer_comtel+"</td>";
+				html += "<td>"+buyer.buyer_fax+"</td>";
+				html += "<td>"+buyer.buyer_mail+"</td>";
+				html += "</tr>";
+			});
+			
+		}else{
+			html+="<tr><td colspan = '7'> 거래처 정보 없음. </td></tr>";
+		}
+		bodyList.html(html);
+		pagenav.html(paging.pagingHTML);
+		$("[name='page']").val("");
+	}
+
+	$(function(){//ready function
+		searchForm = $("[name='searchForm']");
+		bodyList = $("#bodyList");
+		pagenav = $("#pagenav");
+		searchForm.ajaxForm({//ajaxForm 동기요청을 비동기로바꿈
+			dataType : 'json',
+			//여기까지가 요청부분
+			success : createBody
+		});
+		
+	});
+
 </script>
 
 </head>
@@ -52,7 +92,7 @@ function ${pagingVO.funcName}(d){
 			<th>Buyer Mail</th>
 		</tr>
 	</thead>
-	<tbody>
+	<tbody id="bodyList">
 		<c:choose>
 			<c:when test="${not empty pagingVO.dataList}">
 				<c:forEach var="buyerVO" items="${pagingVO.dataList}">
@@ -63,7 +103,7 @@ function ${pagingVO.funcName}(d){
 						<td>${buyerVO.buyer_id}</td>
 						<td><a href="${viewURL}">${buyerVO.buyer_name}</a></td>
 						<td>${buyerVO.buyer_zip}</td>
-						<td>${buyerVO.buyer_add1 }+ ${buyerVO.buyer_add2}</td>
+						<td>${buyerVO.buyer_add1 } ${buyerVO.buyer_add2}</td>
 						<td>${buyerVO.buyer_comtel}</td>
 						<td>${buyerVO.buyer_fax}</td>
 						<td>${buyerVO.buyer_mail}</td>
@@ -72,7 +112,7 @@ function ${pagingVO.funcName}(d){
 			</c:when>
 			<c:otherwise>
 				<tr>
-					<td colspan="6">바이어정보가 존재하지않습니다!</td>
+					<td colspan="7">바이어정보가 존재하지않습니다!</td>
 				</tr>
 			</c:otherwise>
 		</c:choose>
@@ -81,7 +121,7 @@ function ${pagingVO.funcName}(d){
 	<tfoot>
 		<tr>
 				<td colspan="6">
-				<nav aria-label="Page navigation example">
+				<nav aria-label="Page navigation example" id="pagenav">
 					${pagingVO.pagingHTML}
 				</nav>
 			</td>

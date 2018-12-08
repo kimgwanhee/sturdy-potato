@@ -120,5 +120,35 @@
 		</tfoot>
 	</table>
 </form>
+
+<table class="table">
+		<thead class="thead-dark">
+		<tr>
+			<th>PROD_ID</th>
+			<th>PROD_NAME</th>
+			<th>PROD_LGU</th>
+			<th>PROD_OUTLINE</th>
+		</tr>
+		</thead>
+		<tbody>
+			<c:choose>
+				<c:when test="${not empty buyer.prodList}">
+					<c:forEach items="${buyer.prodList}" var="prod">
+						<tr>
+							<td>${prod.prod_id}</td>
+							<td>${prod.prod_name}</td>
+							<td>${prod.prod_lgu}</td>
+							<td>${prod.prod_outline}</td>
+						</tr>
+					</c:forEach>
+				</c:when>
+				<c:otherwise>
+					<tr>
+						<td colspan="4"> 상품 없음 ! !</td>
+					</tr>
+				</c:otherwise>
+			</c:choose>
+		</tbody>
+</table>
 </body>
 </html>

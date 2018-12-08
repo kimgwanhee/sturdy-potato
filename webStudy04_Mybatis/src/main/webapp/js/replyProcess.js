@@ -10,7 +10,7 @@ function replyListMaker(resp) {
 			if (resp.dataList) {
 				$.each(resp.dataList, function(idx, reply) {
 					html += "<tr id='TR_"+reply.rep_no+"'>";
-					html += "<td>" + reply.rep_no + "</td>";
+					html += "<td onclick = 'replyUpdate(this)'>" + reply.rep_no + "</td>";
 					html += "<td>" + reply.bo_no + "</td>";
 					html += "<td>" + reply.rep_writer + "</td>";
 					html += "<td>" + reply.rep_ip + "</td>";
@@ -24,10 +24,22 @@ function replyListMaker(resp) {
 			}
 			pagingArea.html(resp.pagingHTML);
 			listBody.html(html);
+			$('[name="replyForm"]').attr("action", $.getContextPath()+"/reply/replyInsert.do");
 			//여기서 리셋해줘야함 
 //			replyForm[0].reset();//[0]이렇게 첨자로 접근해야됨?
 		}
+		
 	}
+
+function replyUpdate(shadow){
+	var tr = $(shadow).parent();
+//	alert(tr.children(':nth-child(2)').html());
+	$('[name="rep_no"]').val(tr.children(':nth-child(1)').html());
+	$('[name="rep_writer"]').val(tr.children(':nth-child(3)').html());
+	$('[name="rep_content"]').val(tr.children(':nth-child(6)').html());
+	$('[name="replyForm"]').attr("action", $.getContextPath()+"/reply/replyUpdate.do");
+}
+
 
 function pagingReply(page, bo_no) {//여기선 덧글에 대해서만 페이징처리할곳
 		$.ajax({//주소(URL), 메서드, 파라미터(데이타), 내가응답데이타는 어떤형식으로 받을수있는지(html json..등의 데이타타입)가 필요..
@@ -51,8 +63,8 @@ function pagingReply(page, bo_no) {//여기선 덧글에 대해서만 페이징�
 	$(function() {
 		pagingArea = $("#pagingArea");
 		listBody = $("#listBody");
-		var replyForm = $("[name='replyForm']");
-		var delModal = $("#replyDeleteModal");
+		replyForm = $("[name='replyForm']");
+		delModal = $("#replyDeleteModal");
 		
 
 		listBody.on("click", ".replyDelBtn", function(){//동적이게 처리할땐 반드시 이런 코드가 나와야함 ..ㅠ

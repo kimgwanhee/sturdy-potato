@@ -18,7 +18,8 @@ import org.slf4j.LoggerFactory;
 import kr.or.ddit.filter.wrapper.FileUploadRequestWrapper;
 
 public class FileUploadCheckFilter implements Filter {
-	Logger logger = LoggerFactory.getLogger(this.getClass());
+	
+	Logger logger = LoggerFactory.getLogger(this.getClass());//콘솔에 로그 띄워줌
 	
 	@Override
 	public void init(FilterConfig filterConfig) throws ServletException {
@@ -32,7 +33,6 @@ public class FileUploadCheckFilter implements Filter {
 		
 		//contentType의 시작이 뭔지 판별 (form태그에 enctype="Multipart/form-data"이라고 설정하면 contentType 제일 시작이 multipart로 시작된다.)
 		if(contentType!=null && contentType.startsWith("multipart/")) {
-			
 			//servletRequest는 HttpServletRequest를 포괄하고 있으므로 request값을 downcast해준다.
 			HttpServletRequest req = (HttpServletRequest)request;
 			
