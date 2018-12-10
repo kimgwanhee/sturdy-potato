@@ -35,7 +35,7 @@
 			<tr>
 				<th>제목</th>
 				<td><input type="text" name="bo_title"
-					value="${boar.bo_title}" /><span class="error">${error.bo_title}</span></td>
+					value="${board.bo_title}" /><span class="error">${error.bo_title}</span></td>
 			</tr>
 			<tr>
 				<th>비밀번호</th>

@@ -32,16 +32,16 @@ public class BoardServiceImpl implements IBoardService{
 				SqlSession session = CustomSqlSessionFactoryBuilder.getSqlSessionFactory().openSession();
 		){
 			int rowCnt = boardDAO.insertBoard(board, session);
-			int check = 1;
+			int check = 1;//insert성공하면 기본 1
 			File saveFolder = new File("d:/boardFiles");
-			if(!saveFolder.exists()) saveFolder.mkdirs();
+			if(!saveFolder.exists()) saveFolder.mkdirs();//mkdirs-내가 설정한 파일이 존재하지 않으면 만들어주기(카카오톡받은파일)
 			if(rowCnt > 0) {
 				List<PdsVO> pdsList = board.getPdsList();
 				if(pdsList!= null) {
 //					if(1==1) {
 //						throw new RuntimeException("트랜잭션 관리 여부 확인을 위한 강제 예외");
 //					}
-					check += pdsList.size();
+					check += pdsList.size();//insert한번 성공하면 1...
 					for(PdsVO pds : pdsList) {
 						rowCnt += pdsDAO.insertPdsList(board, session);
 						try(
