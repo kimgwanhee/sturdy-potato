@@ -26,9 +26,26 @@
 	$.getContextPath = function(){
 		return "${pageContext.request.contextPath}";
 	}
+	
+	$(function(){
+		$('#delbtn').on('click', function(){
+			var check = confirm("정말 삭제하시겠습니까?");
+			if(check){
+				var pass = prompt("비밀번호 입력");
+				$('[name="bo_pass"]').val(pass);
+				$('[name="delForm"]').submit();
+				
+			}
+		});
+	});
+	
 </script>
 </head>
 <body>
+	<form method="post" name="delForm"  action="${pageContext.request.contextPath}/board/boardDelete.do">
+		<input type="hidden" name="bo_no" value="${board.bo_no}"/>
+		<input type="text" name="bo_pass"/>
+	</form>
 	<div class="container">
 		<table class="table">
 			<thead class="thead-dark">
@@ -67,6 +84,7 @@
 					<th>BO_CONTENT</th>
 					<td>${board.bo_content}</td>
 				</tr>
+				
 				<tr>
 					<th>PDS_FILE</th>
 					<td>
@@ -90,6 +108,15 @@
 				<tr>
 					<th>BO_RCMD</th>
 					<td>${board.bo_rcmd}</td>
+				</tr>
+				<tr>
+					<td colspan="2">
+					<c:url value="/board/boardUpdate.do" var="updateURL">
+						<c:param name="what" value="${board.bo_no }" />
+					</c:url>
+						<input type="button" value="수정" onclick="location.href='${updateURL}'"/>
+						<input type="button" value="삭제" id="delbtn"/>
+					</td>
 				</tr>
 			</tbody>
 		</table>
@@ -141,10 +168,9 @@
 
 
 				<tr>
-					<td colspan="2"><input type="button" value="뒤로"
-						onclick="history.back();" /> <input type="reset" value="취소" /> <%-- 				<c:if test="${mutable}"> --%>
-						<input type="submit" value="수정" /> <input type="button" value="삭제"
-						id="delBtn" /> <%-- 					</c:if> --%></td>
+					<td colspan="2">
+						<input type="button" value="뒤로" onclick="history.back();" /> 
+						<input type="reset" value="취소" /> 
 				</tr>
 			</tfoot>
 		</table>

@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.URLEncoder;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -42,11 +43,20 @@ public class DownloadController implements ICommandHandler {
 	       ){
 	          //헤더 초기화해주기
 	           resp.reset() ;
+	           
+	           //오리지날 파일 인코딩 설정
+	           String orginalfilename = new String(pds.getPds_filename().getBytes("utf-8"),"iso-8859-1");//pds.getPds_filename()에는 원본파일명.do
+	           
 	           //마임타입 설정하기
 	           resp.setContentType(Mime.OCTET.getContentType());
 	           		//구체적인 마임이 뭔지 모를때.. octet가 8 - stream 8비트 -byte로 나감
-	           //오리지날 파일 인코딩 설정
-	           String orginalfilename = new String(pds.getPds_filename().getBytes("utf-8"),"iso-8859-1");//pds.getPds_filename()에는 원본파일명.do
+	           String agent = req.getHeader("User-Agent");
+	           
+	           if(StringUtils.containsIgnoreCase(agent, "msie")||StringUtils.containsIgnoreCase(agent, "trident")) {
+	        	   orginalfilename = URLEncoder.encode(orginalfilename, "UTF-8");
+	           }else {
+	        	   
+	           }
 	           //응답데이터에 보내는 파일 정보 설정
 	           resp.setHeader("Content-Disposition", "attachment; filename=\"" + orginalfilename + "\"");//어떤이름으로 내보내야한다 ~라는것 안그롬 .do로나감 
 	           																						//\"은 파일네임을 ""으로 묶어줘서 공백제거

@@ -34,9 +34,8 @@ public class PdsDAOImpl implements IPdsDAO {
 	}
 
 	@Override
-	public int deletePds(long pds_no) {
-		// TODO Auto-generated method stub
-		return 0;
+	public int deletePds(long pds_no, SqlSession session) {
+		return session.delete("kr.or.ddit.board.dao.IPdsDAO.deletePds", pds_no);
 	}
 
 	@Override
@@ -46,5 +45,10 @@ public class PdsDAOImpl implements IPdsDAO {
 //		return rowCount;
 		
 		return session.insert("kr.or.ddit.board.dao.IPdsDAO.insertPdsList", board);
+	}
+
+	@Override
+	public int deletePdses(BoardVO board, SqlSession session) {
+		return session.insert("kr.or.ddit.board.dao.IPdsDAO.deletePdses", board);
 	}
 }

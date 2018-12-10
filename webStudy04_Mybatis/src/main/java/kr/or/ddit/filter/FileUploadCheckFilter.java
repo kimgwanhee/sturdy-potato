@@ -18,7 +18,8 @@ import org.slf4j.LoggerFactory;
 import kr.or.ddit.filter.wrapper.FileUploadRequestWrapper;
 
 public class FileUploadCheckFilter implements Filter {
-	Logger logger = LoggerFactory.getLogger(this.getClass());
+	
+	Logger logger = LoggerFactory.getLogger(this.getClass());//콘솔에 로그 띄워줌
 	
 	@Override
 	public void init(FilterConfig filterConfig) throws ServletException {
@@ -36,7 +37,7 @@ public class FileUploadCheckFilter implements Filter {
 			//servletRequest는 HttpServletRequest를 포괄하고 있으므로 request값을 downcast해준다.
 			HttpServletRequest req = (HttpServletRequest)request;
 			
-			//파일 임계크기 지정
+			//파일 임계크기 지정                                                                         
 			int sizeThreshold = 10240;
 			
 			//임시 저장소 지정

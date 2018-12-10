@@ -22,16 +22,53 @@ import kr.or.ddit.vo.BoardVO;
 import kr.or.ddit.vo.PagingInfoVO;
 import kr.or.ddit.vo.PdsVO;
 
-public class BoardServiceImpl implements IBoardService{
+public class BoardServiceImpl implements IBoardService {
 	IBoardDAO boardDAO = new BoardDAOImpl();
 	IPdsDAO pdsDAO = new PdsDAOImpl();
+	
+	private int processFiles(BoardVO board, SqlSession session) {
+		int rowCnt = 0;
+		
+		//저장 위치insert
+		File saveFolder = new File("d:/boardFiles");
+		if (!saveFolder.exists())
+			saveFolder.mkdirs();
+
+		List<PdsVO> pdsList = board.getPdsList();
+		if (pdsList != null) {
+//			check += pdsList.size();
+			rowCnt += pdsDAO.insertPdsList(board, session);
+			//파일저장 //실제파일을 webserver에 저장
+			for (PdsVO pds : pdsList) {
+				try (InputStream in = pds.getItem().getInputStream();) {
+					FileUtils.copyInputStreamToFile(in, new File(saveFolder, pds.getPds_savename()));
+				} catch (IOException e) {
+
+				}
+			}
+		}
+		Long[] delFiles = board.getDelFiles();//배열을 하나 만들고 빽업을할라구..
+		
+		if (delFiles != null) {//지우려고 하는 파일이 있는지없는지 먼저 확인
+			String[] saveNames = new String[delFiles.length];//getPds_savename빽업한거임
+			for (int idx = 0; idx < delFiles.length; idx++) {
+				saveNames[idx] = pdsDAO.selectPds(delFiles[idx]).getPds_savename();
+				rowCnt += pdsDAO.deletePds(delFiles[idx], session);
+			}
+			// 파일삭제 //진짜 데이터 지우기 -> 빽업위에 떠둔걸 활용
+			for (String savename : saveNames) {
+				FileUtils.deleteQuietly(new File(saveFolder, savename));
+			}
+		}
+		
+		return rowCnt;
+	}
 
 	@Override
 	public ServiceResult createBoard(BoardVO board) {
-		try(
-				SqlSession session = CustomSqlSessionFactoryBuilder.getSqlSessionFactory().openSession();
-		){
+		try (SqlSession session = CustomSqlSessionFactoryBuilder.getSqlSessionFactory().openSession();) {
 			int rowCnt = boardDAO.insertBoard(board, session);
+<<<<<<< HEAD
 			int check = 1;//insert성공하면 기본 1
 			File saveFolder = new File("d:/boardFiles");
 			if(!saveFolder.exists()) saveFolder.mkdirs();//mkdirs-내가 설정한 파일이 존재하지 않으면 만들어주기(카카오톡받은파일)
@@ -53,9 +90,16 @@ public class BoardServiceImpl implements IBoardService{
 						
 					}
 				}
+=======
+			int check = 1;
+			if (rowCnt > 0) {
+				if(board.getPdsList()!=null) 
+				check += board.getPdsList().size();
+				rowCnt += processFiles(board, session);
+>>>>>>> branch 'master' of https://github.com/kimgwanhee/sturdy-potato.git
 			}
 			ServiceResult result = ServiceResult.FAILED;
-			if(rowCnt >= check) {
+			if (rowCnt >= check) {
 				result = ServiceResult.OK;
 				session.commit();
 			}
@@ -70,14 +114,14 @@ public class BoardServiceImpl implements IBoardService{
 
 	@Override
 	public List<BoardVO> retriveBoardList(PagingInfoVO<BoardVO> pagingVO) {
-		List<BoardVO> result =boardDAO.selectBoardList(pagingVO);
+		List<BoardVO> result = boardDAO.selectBoardList(pagingVO);
 		return result;
 	}
 
 	@Override
 	public BoardVO retriveBoard(long bo_no) {
 		BoardVO result = boardDAO.selectBoard(bo_no);
-		if(result == null) {
+		if (result == null) {
 			throw new BoardException();
 		}
 		return result;
@@ -85,20 +129,60 @@ public class BoardServiceImpl implements IBoardService{
 
 	@Override
 	public ServiceResult modifyBoard(BoardVO board) {
-		// TODO Auto-generated method stub
-		return null;
+		try (
+				SqlSession session = CustomSqlSessionFactoryBuilder.getSqlSessionFactory().openSession(false);
+		) {
+			BoardVO saveBoard = retriveBoard(board.getBo_no());//없으면 여기서 boardexception이 내부에서 발생할것 
+			ServiceResult result = null;
+			
+			if (saveBoard.getBo_pass().equals(board.getBo_pass())) {//비번이 서로 같다면 ..
+				//이제 수정 시작 .. 트랜젝션 시작이라는 게 필요 //-> 위 try()문 -> 커밋을 하면서 트랜잭션 종료를 자동으로 하기위해 넣어둔것 ! 
+				int rowCnt = boardDAO.updateBoard(board, session);
+				int check = rowCnt;
+				if (rowCnt > 0) {//게시글 수정 성공
+					if(board.getPdsList()!=null) {
+						check+= board.getPdsList().size();
+					}
+					if(board.getDelFiles()!=null) {
+						check += board.getDelFiles().length;
+					}
+					rowCnt += processFiles(board, session);
+				}
+				if (rowCnt >= check) {
+					session.commit();
+					result = ServiceResult.OK;
+				} else {
+					result = ServiceResult.FAILED;
+				} // rowCnt 체크 if end
+			} else {//비번이 틀리다면 . . 
+				result = ServiceResult.INVALIDPASSWORD;
+			}
+
+			return result;
+		}
 	}
 
 	@Override
 	public ServiceResult removeBoard(BoardVO board) {
-		// TODO Auto-generated method stub
-		return null;
+		ServiceResult result = ServiceResult.FAILED;
+		BoardVO checkBoard = retriveBoard(board.getBo_no());
+		if(board.getBo_pass().equals(checkBoard.getBo_pass())) {
+			int rowCnt = boardDAO.deleteBoard(board.getBo_no(), session);
+			if(rowCnt>0) {
+				result = ServiceResult.OK;
+			}else {
+				result = ServiceResult.FAILED;
+			}
+		}else {
+			result = ServiceResult.INVALIDPASSWORD;
+		}
+		return result;
 	}
 
 	@Override
 	public PdsVO downloadPds(long pds_no) {
 		PdsVO pds = pdsDAO.selectPds(pds_no);
-		if(pds == null) {
+		if (pds == null) {
 			throw new BoardException();
 		}
 		return pds;

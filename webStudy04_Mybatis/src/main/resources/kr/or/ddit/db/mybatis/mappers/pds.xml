@@ -35,7 +35,21 @@
 		SELECT PDS_NO,   BO_NO,  PDS_FILENAME,   PDS_SAVENAME,
 			    PDS_MIME,   PDS_SIZE,   PDS_FANCYSIZE 
 		FROM PDS WHERE PDS_NO = #{pds_no}
-	
 	</select>
+	
+	<delete id="deletePds" parameterType="long">
+		DELETE 
+		FROM PDS
+		WHERE PDS_NO=#{pds_no}
+	</delete>
+	
+	<delete id="deletePdses" parameterType="boardVO">
+		DELETE 
+		FROM PDS
+		WHERE PDS_NO IN
+		<foreach collection="delFiles" item="pds_no" open="(" close=")" separator=",">
+		 #{pds_no}
+		</foreach>
+	</delete>
 
 </mapper>

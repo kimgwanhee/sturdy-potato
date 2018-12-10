@@ -33,6 +33,7 @@ public class BoardVO implements Serializable{
 	//board와 1:N관계 has~many관계
 	private List<PdsVO> pdsList;
 	private List<ReplyVO> replyList;
+	private Long[] delFiles;
 
 	private List<FileItem> itemList;
 	

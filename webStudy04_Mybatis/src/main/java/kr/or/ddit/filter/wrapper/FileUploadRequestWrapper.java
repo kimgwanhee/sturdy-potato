@@ -66,7 +66,7 @@ public class FileUploadRequestWrapper extends HttpServletRequestWrapper {
 		// 2. 파일 업로드 핸들러 객체 생성
 		
 		//FileItem 오브젝트를 생성하는 클래스
-		DiskFileItemFactory fileItemFactory = new DiskFileItemFactory();
+		DiskFileItemFactory fileItemFactory = new DiskFileItemFactory();//요술봉
 		
 		if(sizeThreshold!=-1) {
 			fileItemFactory.setSizeThreshold(sizeThreshold);
@@ -111,7 +111,7 @@ public class FileUploadRequestWrapper extends HttpServletRequestWrapper {
 						}else {
 							values= new String[alreadyValues.length+1];
 							//System객체에 있는 배열 복사 메서드
-							System.arraycopy(alreadyValues, 0, values, 0, alreadyValues.length);
+							System.arraycopy(alreadyValues, 0, values, 0, alreadyValues.length);//alreadyValues의 길이만큼 - 전체를복사한다는..
 						}
 						//새롭게 가져온 parameterValue를 values 배열에 담아주고 맵에 저장해준다.
 						
@@ -138,7 +138,6 @@ public class FileUploadRequestWrapper extends HttpServletRequestWrapper {
 		} catch (FileUploadException e) {
 			throw new IOException(e);
 		}
-		
 	}
 
 	@Override

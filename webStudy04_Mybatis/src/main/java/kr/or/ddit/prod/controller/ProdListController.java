@@ -14,6 +14,7 @@ import org.apache.commons.lang3.StringUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import kr.or.ddit.mvc.ICommandHandler;
+import kr.or.ddit.mvc.annotation.CommandHandler;
 import kr.or.ddit.prod.dao.IOtherDAO;
 import kr.or.ddit.prod.dao.OtherDAOImpl;
 import kr.or.ddit.prod.service.IProdService;
@@ -24,6 +25,7 @@ import kr.or.ddit.vo.PagingInfoVO;
 import kr.or.ddit.vo.ProdVO;
 import kr.or.ddit.web.calculate.Mime;
 
+@CommandHandler
 public class ProdListController implements ICommandHandler {
 
 	@Override

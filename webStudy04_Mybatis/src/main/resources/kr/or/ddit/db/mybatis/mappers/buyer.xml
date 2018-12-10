@@ -47,9 +47,16 @@
 		select count(*) from buyer
 	</select>
 	
-	<select id="selectBuyer" parameterType="String" resultType="buyerVO">
-		<include refid="kr.or.ddit.buyer.dao.IBuyerDAO.selectBuyerFrag"/>
-		WHERE BUYER_ID = #{buyer_id}
+	<resultMap type="buyerVO" id="buyerMap" autoMapping="true">
+		<id property="buyer_id" column="buyer_id"/>
+		<collection property="prodList" autoMapping="true" ofType="prodVO" javaType="java.util.List"/>
+	</resultMap>
+	
+	<select id="selectBuyer" parameterType="String" resultMap="buyerMap">
+		SELECT BUYER.*, PROD_ID, PROD_NAME, PROD_LGU, PROD_OUTLINE
+		FROM BUYER LEFT OUTER JOIN PROD ON(BUYER.BUYER_ID = PROD.PROD_BUYER)
+		WHERE BUYER.BUYER_ID = #{buyer_id}
+	
 	</select>
 	
 	<select id="countBuyer" parameterType="string" resultType="Long">
