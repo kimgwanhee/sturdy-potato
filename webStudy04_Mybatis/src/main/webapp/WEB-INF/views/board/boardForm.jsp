@@ -28,14 +28,19 @@
 <script type="text/javascript" src="${cPath}/js/ckeditor/ckeditor.js"></script>
    
 </head>
+<c:if test="${not empty message}">
+	<script type="text/javascript">
+		alert("${message}");
+	</script>
+</c:if>
 <body>
 	<h4>게시판 등록하기</h4>
-	<form method="post" action="${pageContext.request.contextPath}/board/boardInsert.do" enctype="multipart/form-data">
+	<form id="boardForm" method="post" action="${pageContext.request.contextPath}/board/boardInsert.do" enctype="multipart/form-data">
 		<table>
 			<tr>
 				<th>제목</th>
 				<td><input type="text" name="bo_title"
-					value="${boar.bo_title}" /><span class="error">${error.bo_title}</span></td>
+					value="${board.bo_title}" /><span class="error">${error.bo_title}</span></td>
 			</tr>
 			<tr>
 				<th>비밀번호</th>
@@ -62,22 +67,56 @@
 				</td>
 			</tr>
 			<tr>
-				<th>파일</th>
-				<td><input type="file" name="bo_file" />
-					 <span class="error">${error.bo_file}</span>
+				<th>기존파일</th>
+				<td>
+					<c:forEach items="${board.pdsList}" var="pds">
+						<span>
+							${pds.pds_filename } &nbsp; <span class="pdsDelete" id="span_${pds.pds_no}">[삭제]</span>   
+							<br><hr>            
+			            </span>
+               </c:forEach>
 				</td>
 			</tr>
 			<tr>
-				<td colspan="2"><input type="submit" value="등록" /> 
-								<input type="reset" value="취소" /> 
-								<input type="button" value="뒤로가기" onclick="history.back();"/> 
+				<td colspan="2">
+					<input type="submit" value="등록" /> 
+					<input type="button" value="수정" id="updateBtn"/> 
+					<input type="reset" value="취소" /> 
+					<input type="button" value="뒤로가기" onclick="history.back();"/> 
 				</td>
 			</tr>
 		</table>
 		<input type="hidden" name="bo_ip" value="${pageContext.request.remoteAddr}">
 		<input type="hidden" name="bo_no" value="${board.bo_no}">
 		<script type="text/javascript">
-		  	CKEDITOR.replace( 'bo_content' );
+			var boardForm = $("#boardForm");	
+			var inputTag = "<input type='text' name='delFiles' value='%v' />";
+			$(".pdsDelete").on("click", function(){
+				$(this).parent().hide();
+				var regex = /span_(\d+)/ig;
+				var pds_no = regex.exec($(this).prop("id"))[1];
+				boardForm.append(inputTag.replace("%v", pds_no));
+			});
+			
+			$("#updateBtn").on("click", function(){
+				boardForm.attr("action", "${pageContext.request.contextPath}/board/boardUpdate.do");
+				boardForm.submit();
+			});
+		
+		  CKEDITOR.replace('bo_content', {
+		      extraAllowedContent: 'h3{clear};h2{line-height};h2 h3{margin-left,margin-top}',
+
+		      // Adding drag and drop image upload.
+		      extraPlugins: 'uploadimage',
+		      uploadUrl: '${pageContext.request.contextPath}/board/uploadImage.do',
+
+		      // Configure your file manager integration. This example uses CKFinder 3 for PHP.
+		      filebrowserImageUploadUrl: '${pageContext.request.contextPath}/board/uploadImage.do',
+
+		      height: 560,
+
+		      removeDialogTabs: 'image:advanced;link:advanced'
+		    });
 		</script>
 	</form>
 </body>

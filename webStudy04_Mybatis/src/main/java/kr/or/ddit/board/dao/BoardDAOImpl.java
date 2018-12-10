@@ -65,15 +65,13 @@ public class BoardDAOImpl implements IBoardDAO {
 	}
 
 	@Override
-	public int updateBoard(BoardVO board) {
-		// TODO Auto-generated method stub
-		return 0;
+	public int updateBoard(BoardVO board, SqlSession session) {
+		return session.update("kr.or.ddit.board.dao.IBoardDAO.updateBoard", board);
 	}
 
 	@Override
-	public int deleteBoard(int bo_no) {
-		// TODO Auto-generated method stub
-		return 0;
+	public int deleteBoard(long bo_no, SqlSession session) {
+		return session.delete("kr.or.ddit.board.dao.IBoardDAO.deleteBoard", bo_no);
 	}
 
 }

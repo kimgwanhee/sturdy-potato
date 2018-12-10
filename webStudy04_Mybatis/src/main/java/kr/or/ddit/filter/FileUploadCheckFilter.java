@@ -33,10 +33,11 @@ public class FileUploadCheckFilter implements Filter {
 		
 		//contentType의 시작이 뭔지 판별 (form태그에 enctype="Multipart/form-data"이라고 설정하면 contentType 제일 시작이 multipart로 시작된다.)
 		if(contentType!=null && contentType.startsWith("multipart/")) {
+			
 			//servletRequest는 HttpServletRequest를 포괄하고 있으므로 request값을 downcast해준다.
 			HttpServletRequest req = (HttpServletRequest)request;
 			
-			//파일 임계크기 지정
+			//파일 임계크기 지정                                                                         
 			int sizeThreshold = 10240;
 			
 			//임시 저장소 지정

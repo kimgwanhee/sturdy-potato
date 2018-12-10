@@ -85,6 +85,24 @@
 		)
 	</insert>
 	
+	<update id="updateBoard" parameterType="boardVO">
+		UPDATE BOARD
+			<set>
+				<if test="@org.apache.commons.lang3.StringUtils@isNotBlank(bo_mail)">
+					BO_MAIL 	= #{bo_mail},
+				</if>
+				<if test="@org.apache.commons.lang3.StringUtils@isNotBlank(bo_title)">
+					BO_TITLE 	= #{bo_title},
+				</if>
+				<if test="@org.apache.commons.lang3.StringUtils@isNotBlank(bo_content)">
+					BO_CONTENT 	= #{bo_content}
+				</if>
+			</set>
+		WHERE
+		BO_NO =#{bo_no}
+	</update>
 	
-  	
+	<delete id="deleteBoard" parameterType="long">
+		DELETE FROM BOARD WHERE BO_NO=#{bo_no}
+	</delete>
 </mapper>

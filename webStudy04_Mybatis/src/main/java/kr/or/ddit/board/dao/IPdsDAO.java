@@ -45,8 +45,19 @@ public interface IPdsDAO {
 	/**
 	 * 게시글 수정시 파일 삭제를 위한 메소드
 	 * @param pds_no
+	 * @param session TODO
 	 * @return row count
 	 */
-	public int deletePds(long pds_no);
+	public int deletePds(long pds_no, SqlSession session);
+	
+	/**
+	 * 여러개의 첨부파일을 한꺼번에 삭제
+	 * @param board
+	 * @param session TODO
+	 * @return
+	 */
+	public int deletePdses(BoardVO board, SqlSession session);
+	
+	
 	
 }

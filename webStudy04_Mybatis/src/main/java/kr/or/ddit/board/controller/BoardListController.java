@@ -15,13 +15,16 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import kr.or.ddit.board.service.BoardServiceImpl;
 import kr.or.ddit.board.service.IBoardService;
 import kr.or.ddit.mvc.ICommandHandler;
+import kr.or.ddit.mvc.annotation.CommandHandler;
+import kr.or.ddit.mvc.annotation.URIMapping;
 import kr.or.ddit.vo.BoardVO;
 import kr.or.ddit.vo.PagingInfoVO;
 import kr.or.ddit.web.calculate.Mime;
 
-public class BoardListController implements ICommandHandler {
+@CommandHandler//현재 이건 자동으로 등록만하고 요청정보는 없음
+public class BoardListController {
 	
-	@Override
+	@URIMapping("/board/boardList.do")//메서드 숨어있고 get방식으로 설정 - uri에 등록된 한줄이 만들어진것
 	public String Process(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
 		
 		String page = req.getParameter("page");
