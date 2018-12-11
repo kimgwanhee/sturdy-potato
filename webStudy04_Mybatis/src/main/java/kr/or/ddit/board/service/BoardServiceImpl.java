@@ -68,35 +68,13 @@ public class BoardServiceImpl implements IBoardService {
 	public ServiceResult createBoard(BoardVO board) {
 		try (SqlSession session = CustomSqlSessionFactoryBuilder.getSqlSessionFactory().openSession();) {
 			int rowCnt = boardDAO.insertBoard(board, session);
-<<<<<<< HEAD
-			int check = 1;//insert성공하면 기본 1
-			File saveFolder = new File("d:/boardFiles");
-			if(!saveFolder.exists()) saveFolder.mkdirs();//mkdirs-내가 설정한 파일이 존재하지 않으면 만들어주기(카카오톡받은파일)
-			if(rowCnt > 0) {
-				List<PdsVO> pdsList = board.getPdsList();
-				if(pdsList!= null) {
-//					if(1==1) {
-//						throw new RuntimeException("트랜잭션 관리 여부 확인을 위한 강제 예외");
-//					}
-					check += pdsList.size();//insert한번 성공하면 1...
-					for(PdsVO pds : pdsList) {
-						rowCnt += pdsDAO.insertPdsList(board, session);
-						try(
-								InputStream in = pds.getItem().getInputStream();
-						){
-							FileUtils.copyInputStreamToFile(in, new File(saveFolder, pds.getPds_savename()));
-						}catch(IOException e) {
-						}
-						
-					}
-				}
-=======
+
 			int check = 1;
 			if (rowCnt > 0) {
 				if(board.getPdsList()!=null) 
 				check += board.getPdsList().size();
 				rowCnt += processFiles(board, session);
->>>>>>> branch 'master' of https://github.com/kimgwanhee/sturdy-potato.git
+
 			}
 			ServiceResult result = ServiceResult.FAILED;
 			if (rowCnt >= check) {
