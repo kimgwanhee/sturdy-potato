@@ -248,6 +248,32 @@
 	  </div>
 	</div>
 	
+		<!-- Modal -->
+	<div class="modal fade" id="replyUpdateModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	  <div class="modal-dialog" role="document">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <h5 class="modal-title" id="exampleModalLabel">수정</h5>
+	        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+	          <span aria-hidden="true">&times;</span>
+	        </button>
+	      </div>
+	      <div class="modal-body">
+	      	<form onsubmit="return false" id="modalForm">
+<!-- 	      	onsubmit는 절대 전송하지않겠다 전송용x , 그냥 리셋시킬용-->
+		      <input type="hidden"  id="rep_no" value="${board.bo_no}"/>
+		      <input type="text" id="rep_no" />
+		      	내용 : <input type="text" id="rep_content" />
+		    </form>
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-primary" id="modalBtn">삭제</button>
+	        <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+	
 <script type="text/javascript">
 	function paging(page){
 		pagingReply(page, ${board.bo_no});
