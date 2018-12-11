@@ -15,14 +15,16 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import kr.or.ddit.board.service.IReplyService;
 import kr.or.ddit.board.service.ReplyServiceImpl;
-import kr.or.ddit.mvc.ICommandHandler;
+import kr.or.ddit.mvc.annotation.CommandHandler;
+import kr.or.ddit.mvc.annotation.URIMapping;
 import kr.or.ddit.vo.PagingInfoVO;
 import kr.or.ddit.vo.ReplyVO;
 import kr.or.ddit.web.calculate.Mime;
 
-public class ReplyListController implements ICommandHandler{
+@CommandHandler
+public class ReplyListController {
 
-	@Override
+	@URIMapping("/reply/replyList.do")
 	public String Process(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
 		//bo_no, page 이 두가지를 먼저 뽑아내야할것
 		

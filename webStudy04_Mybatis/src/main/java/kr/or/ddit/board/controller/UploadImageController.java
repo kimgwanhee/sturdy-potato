@@ -19,12 +19,15 @@ import org.apache.commons.io.FileUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import kr.or.ddit.filter.wrapper.FileUploadRequestWrapper;
-import kr.or.ddit.mvc.ICommandHandler;
+import kr.or.ddit.mvc.annotation.CommandHandler;
+import kr.or.ddit.mvc.annotation.URIMapping;
+import kr.or.ddit.mvc.annotation.URIMapping.HttpMethod;
 import kr.or.ddit.web.calculate.Mime;
 
-public class UploadImageController implements ICommandHandler {
+@CommandHandler
+public class UploadImageController{
 
-	@Override
+	@URIMapping(value="/board/uploadImage.do", method=HttpMethod.POST)
 	public String Process(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
 
 		String boardImagesUrl = "/boardImages";

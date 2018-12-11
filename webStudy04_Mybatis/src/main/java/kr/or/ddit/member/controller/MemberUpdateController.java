@@ -26,12 +26,15 @@ import kr.or.ddit.ServiceResult;
 import kr.or.ddit.filter.wrapper.FileUploadRequestWrapper;
 import kr.or.ddit.member.service.IMemberService;
 import kr.or.ddit.member.service.MemberServiceImpl;
-import kr.or.ddit.mvc.ICommandHandler;
+import kr.or.ddit.mvc.annotation.CommandHandler;
+import kr.or.ddit.mvc.annotation.URIMapping;
+import kr.or.ddit.mvc.annotation.URIMapping.HttpMethod;
 import kr.or.ddit.validator.GeneralValidator;
 import kr.or.ddit.validator.UpdateGroup;
 import kr.or.ddit.vo.MemberVO;
 
-public class MemberUpdateController implements ICommandHandler {
+@CommandHandler
+public class MemberUpdateController {
 	/*
 	 * //1. 요청을 받으려면 등록, 매핑하기
 	 * 
@@ -47,7 +50,7 @@ public class MemberUpdateController implements ICommandHandler {
 	 * //8. 이동 방식을 결정하고, V.L로 이동. RequestDispatcher rd =
 	 * req.getRequestDispatcher(view); rd.forward(req, resp);
 	 */
-	@Override
+	@URIMapping(value="/member/memberUpdate.do", method=HttpMethod.POST)
 	public String Process(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		// 8가지동작
 		// POST에서 제일 먼저 특수문자 처리

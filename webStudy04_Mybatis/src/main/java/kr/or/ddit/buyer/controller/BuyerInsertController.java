@@ -17,34 +17,24 @@ import kr.or.ddit.ServiceResult;
 import kr.or.ddit.buyer.dao.IBuyerDAO;
 import kr.or.ddit.buyer.service.BuyerServiceImpl;
 import kr.or.ddit.buyer.service.IBuyerService;
-import kr.or.ddit.mvc.ICommandHandler;
+import kr.or.ddit.mvc.annotation.CommandHandler;
+import kr.or.ddit.mvc.annotation.URIMapping;
+import kr.or.ddit.mvc.annotation.URIMapping.HttpMethod;
 import kr.or.ddit.prod.dao.IOtherDAO;
 import kr.or.ddit.prod.dao.OtherDAOImpl;
 import kr.or.ddit.vo.BuyerVO;
 import kr.or.ddit.vo.MemberVO;
 
-public class BuyerInsertController implements ICommandHandler{
+@CommandHandler
+public class BuyerInsertController{
 	
-	@Override
-	public String Process(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
-		IOtherDAO otherDao = new OtherDAOImpl();
-		List<Map<String, Object>> lprodList=otherDao.selectLprodList();
-		req.setAttribute("lprodList", lprodList);
-		String view = null;
-		if("get".equalsIgnoreCase(req.getMethod())) {	//그냥 가입될때//페이지만 보여줄때 doget
-			view = doGet(req, resp);
-		}else if("post".equalsIgnoreCase(req.getMethod())){//post실행
-			view = doPost(req, resp);
-		}else {
-			resp.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
-		}
-		return view;
-	}
-
-	private String doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException{
+	@URIMapping(value="/buyer/buyerInsert.do", method=HttpMethod.GET)
+	public String doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException{
 		return "buyer/buyerForm";//서버사이드
 	}
-	private String doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException{
+	
+	@URIMapping(value="/buyer/buyerInsert.do", method=HttpMethod.POST)
+	public String doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException{
 		BuyerVO buyer = new BuyerVO();
 		req.setAttribute("buyer", buyer);
 		

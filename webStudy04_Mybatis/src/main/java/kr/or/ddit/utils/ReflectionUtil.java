@@ -1,17 +1,47 @@
 package kr.or.ddit.utils;
 
 import java.io.File;
+import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.net.URL;
+import java.nio.file.FileVisitResult;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.apache.taglibs.standard.lang.jstl.Literal;
-
-
 public class ReflectionUtil {
+	
+	public static List<Class<?>> getClassesAtBasePackageTraversing(String basePackage) throws Exception {
+		List<Class<?>> classList = new ArrayList<>();
+		URL baseURL = Thread.currentThread().getContextClassLoader().getResource("/" + basePackage.replace(".", "/"));
+		Path start = Paths.get(baseURL.toURI());
+		
+		Files.walkFileTree(start, new SimpleFileVisitor<Path>() {
+			@Override
+			public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+				if(file.toString().endsWith(".class")) {
+//					kr.or.ddit.board.controller.BoardDeleteController
+					String temp = file.toString().substring(start.toString().length());
+					String qualifiedName =  basePackage + temp.substring(0, temp.lastIndexOf('.'))
+											.replace(File.separatorChar , '.');
+					try {
+						classList.add(Class.forName(qualifiedName));
+					} catch (ClassNotFoundException e) {
+						return FileVisitResult.CONTINUE;
+					}
+				}
+				return super.visitFile(file, attrs);
+			}
+		});
+		return classList;
+	}
+	
 	public static List<Class<?>> getClassesAtBasePackage(String basePackage) {
 		List<Class<?>> classList = new ArrayList<>();
 		URL baseURL = Thread.currentThread().getContextClassLoader().getResource("/" + basePackage.replace(".", "/"));
@@ -41,19 +71,19 @@ public class ReflectionUtil {
 		return classList;
 	}
 
-	public static List<Class<?>> getClassesAtBasePackages(String... basePackages) {// ...가변 파라미터->사실 안에서 가지고놀땐 배열로 가지고
-																					// 논다
+	public static List<Class<?>> getClassesAtBasePackages(String... basePackages) throws Exception {
+		// ...가변 파라미터->사실 안에서 가지고놀땐 배열로 가지고 논다
 		List<Class<?>> classList = new ArrayList<>();
 		if (basePackages != null) {
 			for (String basePackage : basePackages) {
-				classList.addAll(getClassesAtBasePackage(basePackage));
+				classList.addAll(getClassesAtBasePackageTraversing(basePackage));
 			}
 		}
 		return classList;
 	}
 
 	public static List<Class<?>> getClassesWithAnnotationAtBasePackages(Class<? extends Annotation> annotationType,
-			String... basePackages) {
+			String... basePackages) throws Exception {
 		List<Class<?>> classList = getClassesAtBasePackages(basePackages);
 		for (int idx = classList.size() - 1; idx >= 0; idx--) {
 			Class<?> temp = classList.get(idx);

@@ -14,10 +14,13 @@ import org.apache.commons.lang3.StringUtils;
 import kr.or.ddit.ServiceResult;
 import kr.or.ddit.member.service.IMemberService;
 import kr.or.ddit.member.service.MemberServiceImpl;
-import kr.or.ddit.mvc.ICommandHandler;
+import kr.or.ddit.mvc.annotation.CommandHandler;
+import kr.or.ddit.mvc.annotation.URIMapping;
+import kr.or.ddit.mvc.annotation.URIMapping.HttpMethod;
 import kr.or.ddit.vo.MemberVO;
 
-public class MemberDeleteController implements ICommandHandler{
+@CommandHandler
+public class MemberDeleteController {
 	//post
 	//탈퇴를 시키려면 필요한데이타 id와 pass 대한 검증 
 	//둘중 하나라도 누락되면 bad request발생
@@ -25,8 +28,7 @@ public class MemberDeleteController implements ICommandHandler{
 	
 	//removemember에서 검증
 	//그전에 memberservice완성..
-	
-	@Override
+	@URIMapping(value="/member/memberDelete.do",method=HttpMethod.POST)
 	public String Process(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		req.setCharacterEncoding("UTF-8");
 		

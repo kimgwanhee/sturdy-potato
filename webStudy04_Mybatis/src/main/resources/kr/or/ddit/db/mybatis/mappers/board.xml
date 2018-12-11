@@ -37,14 +37,16 @@
 	<select id="selectBoardList" resultType="boardVO" parameterType="pagingVO">
       SELECT B.*
          FROM( SELECT ROWNUM AS RNUM, A.*
-                  FROM ( SELECT BOARD.* 
+                  FROM ( SELECT BO_NO, LEVEL BO_LEVEL,
+                  			LPAD('Re:',(LEVEL-1)*3, ' ')||BO_TITLE BO_TITLE, 
+								BO_WRITER, BO_DATE,
+								BO_HIT, BO_RCMD
                             FROM BOARD
-                            ORDER BY ROWID DESC) A 
                <include refid="kr.or.ddit.board.dao.IBoardDAO.searchFrag"/>      
-                            ) b
-<!--            <![CDATA[ -->
-<!--               WHERE RNUM >=1 AND RNUM <=10 -->
-<!--            ]]> -->
+		              		START WITH BO_PARENT IS NULL
+							CONNECT BY PRIOR BO_NO = BO_PARENT
+							ORDER SIBLINGS BY BO_NO DESC
+                            ) A ) B
            WHERE RNUM BETWEEN #{startRow} AND #{endRow}
 	</select>
   	
@@ -55,13 +57,14 @@
 	</select>
 	
 	<resultMap type="boardVO" id="boardMap" autoMapping="true">
-		<id property="bo_no" column="BO_NO"/>
+		<id property="bo_no" column="BOARD_NO"/>
+		
 		<collection property="pdsList" ofType="pdsVO" autoMapping="true"></collection>
 	</resultMap>
 	
 	<select id="selectBoard" parameterType="long" resultMap="boardMap" >
 		SELECT
-		    BOARD.BO_NO, BO_WRITER, BO_PASS, BO_IP,
+		    BOARD.BO_NO BOARD_NO, BO_WRITER, BO_PASS, BO_IP,
 		    BO_MAIL, BO_TITLE, BO_CONTENT, BO_DATE,
 		    BO_HIT, BO_RCMD, PDS_NO, PDS_SAVENAME, PDS_FILENAME, PDS_SIZE, PDS_FANCYSIZE, PDS_MIME
 		FROM  BOARD LEFT OUTER JOIN PDS ON(BOARD.BO_NO = PDS.BO_NO)
@@ -78,10 +81,16 @@
 		    BO_NO, BO_WRITER, BO_PASS,
 		    BO_IP, BO_MAIL, BO_TITLE,
 		    BO_CONTENT, BO_DATE
+		    <if test="bo_parent > 0" >
+		   		, BO_PARENT
+		    </if>
 		) VALUES (
 		    #{bo_no}, #{bo_writer}, #{bo_pass},
 		    #{bo_ip}, #{bo_mail}, #{bo_title}, #{bo_content},
 		    sysdate
+		    <if test="bo_parent > 0" >
+		    	, #{bo_parent, jdbcType=NUMERIC}
+		    </if>
 		)
 	</insert>
 	
@@ -103,6 +112,26 @@
 	</update>
 	
 	<delete id="deleteBoard" parameterType="long">
-		DELETE FROM BOARD WHERE BO_NO=#{bo_no}
+		DELETE FROM BOARD 
+			WHERE BO_NO IN(
+		    SELECT BO_NO
+		    FROM BOARD
+		    START WITH BO_NO = #{bo_no}
+		    CONNECT BY PRIOR BO_NO = BO_PARENT
+			)
 	</delete>
+	
+	<update id="incrementRcmd" parameterType="long">
+		UPDATE BOARD 
+		SET
+		BO_RCMD=BO_RCMD+1
+		WHERE BO_NO=#{bo_no}
+	</update>
+	
+	<update id="incrementHit" parameterType="long">
+		UPDATE BOARD
+		SET
+		BO_HIT = BO_HIT+1
+		WHERE BO_NO=#{bo_no}
+	</update>
 </mapper>

@@ -35,7 +35,7 @@
 </c:if>
 <body>
 	<h4>게시판 등록하기</h4>
-	<form id="boardForm" method="post" action="${pageContext.request.contextPath}/board/boardInsert.do" enctype="multipart/form-data">
+	<form id="boardForm" method="post" enctype="multipart/form-data">
 		<table>
 			<tr>
 				<th>제목</th>
@@ -57,6 +57,16 @@
 				<td><input type="text" name="bo_mail"
 					value="${board.bo_mail}" /><span class="error">${error.bo_mail}</span></td>
 			</tr>
+			
+			<tr>
+				<th>파일</th>
+				<td>
+					<input type="file" name="bo_file"/>
+					<input type="file" name="bo_file"/>
+					<input type="file" name="bo_file"/>
+				</td>
+			</tr>
+			
 			<tr>
 				<th>내용</th>
 				<td>
@@ -86,8 +96,10 @@
 				</td>
 			</tr>
 		</table>
-		<input type="hidden" name="bo_ip" value="${pageContext.request.remoteAddr}">
 		<input type="hidden" name="bo_no" value="${board.bo_no}">
+		<input type="hidden" name="bo_ip" value="${pageContext.request.remoteAddr}">
+		<input type="hidden" name="bo_parent" value="${param.parent}">
+		
 		<script type="text/javascript">
 			var boardForm = $("#boardForm");	
 			var inputTag = "<input type='text' name='delFiles' value='%v' />";

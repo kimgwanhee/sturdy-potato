@@ -12,11 +12,15 @@ import javax.servlet.http.HttpSession;
 
 import kr.or.ddit.member.service.IMemberService;
 import kr.or.ddit.member.service.MemberServiceImpl;
-import kr.or.ddit.mvc.ICommandHandler;
+import kr.or.ddit.mvc.annotation.CommandHandler;
+import kr.or.ddit.mvc.annotation.URIMapping;
+import kr.or.ddit.mvc.annotation.URIMapping.HttpMethod;
 import kr.or.ddit.vo.MemberVO;
 
-public class MyPageController implements ICommandHandler{
-	@Override
+@CommandHandler
+public class MyPageController {
+	
+	@URIMapping("/member/mypage.do")
 	public String Process(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		HttpSession session = req.getSession(false);
 		if(session==null || session.isNew()) {//마이페이지는 ..이게 절대 최초의 요청이면안되므로

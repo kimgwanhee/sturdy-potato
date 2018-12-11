@@ -134,7 +134,10 @@ $(function(){
 				<c:forEach items="${pagingVO.dataList}" var="boardVO">
 					<tr>
 						<td>${boardVO.bo_no }</td>
-						<td>${boardVO.bo_title }</td>
+						<td><c:forEach begin="1" end="${board.bo_level}">
+							&nbsp;
+						</c:forEach>
+						${boardVO.bo_title }</td>
 						<td>${boardVO.bo_writer }</td>
 						<td>${boardVO.bo_date }</td>
 						<td>${boardVO.bo_hit }</td>

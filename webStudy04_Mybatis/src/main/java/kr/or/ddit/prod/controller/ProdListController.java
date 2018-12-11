@@ -13,8 +13,8 @@ import org.apache.commons.lang3.StringUtils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import kr.or.ddit.mvc.ICommandHandler;
 import kr.or.ddit.mvc.annotation.CommandHandler;
+import kr.or.ddit.mvc.annotation.URIMapping;
 import kr.or.ddit.prod.dao.IOtherDAO;
 import kr.or.ddit.prod.dao.OtherDAOImpl;
 import kr.or.ddit.prod.service.IProdService;
@@ -26,9 +26,9 @@ import kr.or.ddit.vo.ProdVO;
 import kr.or.ddit.web.calculate.Mime;
 
 @CommandHandler
-public class ProdListController implements ICommandHandler {
+public class ProdListController {
 
-	@Override
+	@URIMapping("/prod/prodList.do")
 	public String Process(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
 		//1. 매핑 설정 해야함 -> urihandler~
 		//2. 요청분석

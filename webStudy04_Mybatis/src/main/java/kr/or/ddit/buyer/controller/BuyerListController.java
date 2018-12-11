@@ -14,17 +14,19 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import kr.or.ddit.buyer.service.BuyerServiceImpl;
 import kr.or.ddit.buyer.service.IBuyerService;
-import kr.or.ddit.mvc.ICommandHandler;
+import kr.or.ddit.mvc.annotation.CommandHandler;
+import kr.or.ddit.mvc.annotation.URIMapping;
 import kr.or.ddit.vo.BuyerVO;
 import kr.or.ddit.vo.PagingInfoVO;
 import kr.or.ddit.web.calculate.Mime;
 
-public class BuyerListController implements ICommandHandler{
+@CommandHandler
+public class BuyerListController{
 
 	//비즈니스모델 선택
 	//모델생성
 	//뷰선택 후 주소를 frontcontroller로 보내기
-	@Override
+	@URIMapping("/buyer/buyerList.do")
 	public String Process(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
 		
 		String searchWord = req.getParameter("searchWord");

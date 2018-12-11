@@ -14,11 +14,14 @@ import org.apache.commons.lang3.StringUtils;
 
 import kr.or.ddit.member.service.IMemberService;
 import kr.or.ddit.member.service.MemberServiceImpl;
-import kr.or.ddit.mvc.ICommandHandler;
+import kr.or.ddit.mvc.annotation.CommandHandler;
+import kr.or.ddit.mvc.annotation.URIMapping;
 import kr.or.ddit.vo.MemberVO;
 import kr.or.ddit.vo.PagingInfoVO;
 
-public class MemberListController implements ICommandHandler{
+@CommandHandler
+public class MemberListController {
+	@URIMapping("/member/memberList.do")
 	public String Process(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		//1. 요청을 받으려면 등록, 매핑하기
 		//2. 요청 분석(1. 주소를분석 2. 파라미터 3. 메소드 4. 헤더넘겨서 헤더도 분석...)

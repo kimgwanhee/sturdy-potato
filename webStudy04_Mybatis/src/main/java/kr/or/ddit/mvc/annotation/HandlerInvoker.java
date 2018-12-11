@@ -1,8 +1,10 @@
 package kr.or.ddit.mvc.annotation;
 
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -16,16 +18,16 @@ public class HandlerInvoker {
 	 * @param resp
 	 * @return
 	 */
-	public String invokeHandler(URIMappingInfo mappingInfo, HttpServletRequest req, HttpServletResponse resp) {
+	public String invokeHandler(URIMappingInfo mappingInfo, 
+							HttpServletRequest req, 
+							HttpServletResponse resp) throws IOException, ServletException 
+	{
 		Object handler = mappingInfo.getCommandHandler();
 		Method handlerMethod = mappingInfo.getHandlerMethod();
 		try {
-			return (String) handlerMethod.invoke(handler, req, resp);
+			return (String) handlerMethod.invoke(handler, req, resp); //논리적뷰네임 -> invoker핸들러가 받음
 		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
 			throw new RuntimeException("핸들러 호출 도중 예외 발생", e);
 		}
-		
-		
-		
 	}
 }

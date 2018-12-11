@@ -21,39 +21,34 @@ import org.apache.commons.lang3.StringUtils;
 import kr.or.ddit.CommonException;
 import kr.or.ddit.ServiceResult;
 import kr.or.ddit.filter.wrapper.FileUploadRequestWrapper;
-import kr.or.ddit.mvc.ICommandHandler;
+import kr.or.ddit.mvc.annotation.CommandHandler;
+import kr.or.ddit.mvc.annotation.URIMapping;
+import kr.or.ddit.mvc.annotation.URIMapping.HttpMethod;
 import kr.or.ddit.prod.dao.IOtherDAO;
 import kr.or.ddit.prod.dao.OtherDAOImpl;
 import kr.or.ddit.prod.service.IProdService;
 import kr.or.ddit.prod.service.ProdServiceImpl;
 import kr.or.ddit.vo.ProdVO;
 
-public class prodInsertController implements ICommandHandler {
-
-	@Override
-	public String Process(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
-		String method =req.getMethod();
-		IOtherDAO otherDAO = new OtherDAOImpl();
-		List<Map<String, Object>> lprodList =  otherDAO.selectLprodList();
-		req.setAttribute("lprodList", lprodList);
-		
-		String view = null;
-		if("get".equalsIgnoreCase(method)) {
-			 view = doGet(req, resp);//논리적이 뷰 네임
-		}else if("post".equalsIgnoreCase(method)){
-			 view = doPost(req, resp);
-		}else {
-			resp.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
-		}
-		return view;
-	}
+@CommandHandler
+public class prodInsertController {
+	IProdService service = new ProdServiceImpl();
+	IOtherDAO otherDAO = new OtherDAOImpl();
 	
-	private String doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
+	public void makeLprodList(HttpServletRequest req) {
+		List<Map<String, Object>> lprodList = otherDAO.selectLprodList();
+		req.setAttribute("lprodList", lprodList);
+	}
+
+	@URIMapping(value="/prod/prodInsert.do", method=HttpMethod.GET)
+	public String doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
+		makeLprodList(req);
 		return "prod/prodForm";
 	}
 	
-	private String doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
-		req.setCharacterEncoding("UTF-8");
+	@URIMapping(value="/prod/prodInsert.do", method=HttpMethod.POST)
+	public String doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
+		makeLprodList(req);
 		ProdVO prod = new ProdVO();
 		req.setAttribute("prod", prod);
 		
@@ -87,7 +82,6 @@ public class prodInsertController implements ICommandHandler {
 					}
 				}
 			}
-			IProdService service = new ProdServiceImpl();
 			ServiceResult result = service.creatProd(prod);
 			switch (result) {
 			case FAILED:

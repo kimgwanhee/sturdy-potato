@@ -16,13 +16,16 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import kr.or.ddit.ServiceResult;
 import kr.or.ddit.board.service.IReplyService;
 import kr.or.ddit.board.service.ReplyServiceImpl;
-import kr.or.ddit.mvc.ICommandHandler;
+import kr.or.ddit.mvc.annotation.CommandHandler;
+import kr.or.ddit.mvc.annotation.URIMapping;
+import kr.or.ddit.mvc.annotation.URIMapping.HttpMethod;
 import kr.or.ddit.vo.ReplyVO;
 import kr.or.ddit.web.calculate.Mime;
 
-public class ReplyUpdateController implements ICommandHandler {
+@CommandHandler
+public class ReplyUpdateController{
 
-	@Override
+	@URIMapping(value="/reply/replyUpdate.do", method=HttpMethod.POST)
 	public String Process(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
 		String rep_noStr = req.getParameter("rep_no");
 		String rep_writer = req.getParameter("rep_writer");

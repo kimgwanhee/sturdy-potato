@@ -14,12 +14,15 @@ import kr.or.ddit.ServiceResult;
 import kr.or.ddit.buyer.dao.IBuyerDAO;
 import kr.or.ddit.buyer.service.BuyerServiceImpl;
 import kr.or.ddit.buyer.service.IBuyerService;
-import kr.or.ddit.mvc.ICommandHandler;
+import kr.or.ddit.mvc.annotation.CommandHandler;
+import kr.or.ddit.mvc.annotation.URIMapping;
+import kr.or.ddit.mvc.annotation.URIMapping.HttpMethod;
 import kr.or.ddit.vo.BuyerVO;
 
-public class BuyerUpdateController implements ICommandHandler {
+@CommandHandler
+public class BuyerUpdateController{
 
-	@Override
+	@URIMapping(value="/buyer/buyerUpdate.do", method=HttpMethod.POST)
 	public String Process(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
 		req.setCharacterEncoding("UTF-8");
 		//REQUEST 파라미터로 받은값을 BUYER객체에 담아주기

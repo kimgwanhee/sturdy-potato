@@ -23,33 +23,24 @@ import kr.or.ddit.ServiceResult;
 import kr.or.ddit.filter.wrapper.FileUploadRequestWrapper;
 import kr.or.ddit.member.service.IMemberService;
 import kr.or.ddit.member.service.MemberServiceImpl;
-import kr.or.ddit.mvc.ICommandHandler;
+import kr.or.ddit.mvc.annotation.CommandHandler;
+import kr.or.ddit.mvc.annotation.URIMapping;
+import kr.or.ddit.mvc.annotation.URIMapping.HttpMethod;
 import kr.or.ddit.validator.GeneralValidator;
 import kr.or.ddit.validator.InsertGroup;
 import kr.or.ddit.vo.MemberVO;
 
-public class MemberInsertController implements ICommandHandler {// 여긴 하나의 주소로 두개의 메서드 문제가됨..->
+@CommandHandler
+public class MemberInsertController  {// 여긴 하나의 주소로 두개의 메서드 문제가됨..->
 
-	@Override
-	public String Process(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
-		String method = req.getMethod();
-		String view = null;
-		if ("get".equalsIgnoreCase(method)) {// 메소드가 대문자로올지 소문자로올지 몰라서..equalsIgnoreCase
-			view = doGet(req, resp);
-		} else if ("post".equalsIgnoreCase(method)) {
-			view = doPost(req, resp);
-		} else {// 여기에 걸리면 우리가 처리할수있는 메소드 x -> 잘못된메서드 요청한 클라이언트잘못 400번대에러
-			resp.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
-		}
-		return view;
-	}
-
+	@URIMapping(value="/member/memberInsert.do", method=HttpMethod.GET)
 	public String doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		String view = "member/memberForm";// 6번..
 		return view;
 	}
 
-	protected String doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+	@URIMapping(value="/member/memberInsert.do",method=HttpMethod.POST)
+	public String doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		// 요청분석
 		// 검증
 		// 로직과의 의존관계형성

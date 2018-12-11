@@ -12,12 +12,14 @@ import org.apache.commons.lang3.StringUtils;
 
 import kr.or.ddit.buyer.service.BuyerServiceImpl;
 import kr.or.ddit.buyer.service.IBuyerService;
-import kr.or.ddit.mvc.ICommandHandler;
+import kr.or.ddit.mvc.annotation.CommandHandler;
+import kr.or.ddit.mvc.annotation.URIMapping;
 import kr.or.ddit.vo.BuyerVO;
 
-public class BuyerViewController implements ICommandHandler {
+@CommandHandler
+public class BuyerViewController {
 
-	@Override
+	@URIMapping("/buyer/buyerView.do")
 	public String Process(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
 		//model 선택하고
 		//model 데이터를 생성

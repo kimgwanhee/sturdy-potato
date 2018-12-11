@@ -26,13 +26,13 @@ public class BoardServiceImpl implements IBoardService {
 	IBoardDAO boardDAO = new BoardDAOImpl();
 	IPdsDAO pdsDAO = new PdsDAOImpl();
 	
+	//저장 위치insert
+	File saveFolder = new File("d:/boardFiles");
+	{
+		if (!saveFolder.exists()) saveFolder.mkdirs();
+	}
 	private int processFiles(BoardVO board, SqlSession session) {
 		int rowCnt = 0;
-		
-		//저장 위치insert
-		File saveFolder = new File("d:/boardFiles");
-		if (!saveFolder.exists())
-			saveFolder.mkdirs();
 
 		List<PdsVO> pdsList = board.getPdsList();
 		if (pdsList != null) {
@@ -140,19 +140,34 @@ public class BoardServiceImpl implements IBoardService {
 
 	@Override
 	public ServiceResult removeBoard(BoardVO board) {
-		ServiceResult result = ServiceResult.FAILED;
-		BoardVO checkBoard = retriveBoard(board.getBo_no());
-		if(board.getBo_pass().equals(checkBoard.getBo_pass())) {
-			int rowCnt = boardDAO.deleteBoard(board.getBo_no(), session);
-			if(rowCnt>0) {
-				result = ServiceResult.OK;
+		try(
+				SqlSession session = CustomSqlSessionFactoryBuilder.getSqlSessionFactory().openSession(false);
+				//트랜잭션을 관리하는 구조로 만듬
+		){
+			ServiceResult result = ServiceResult.FAILED;
+			BoardVO checkBoard = retriveBoard(board.getBo_no());
+			//1. 자식들까지 조회할수있는 쿼리문 작성해야함 -> 그 후 자식까지 일일히 지우기
+			//2. 정크파일(쓰레기) 데이타가 끊겨있는 파일을 일정기간마다 점검해서.. batchjob 
+			
+			if(board.getBo_pass().equals(checkBoard.getBo_pass())) {
+				int rowCnt = boardDAO.deleteBoard(board.getBo_no(), session);
+				if(rowCnt>0) {
+					List<PdsVO> pdsList = checkBoard.getPdsList();
+					if(pdsList!=null) {
+						for(PdsVO pds : pdsList) {
+							FileUtils.deleteQuietly(new File(saveFolder, pds.getPds_savename()));
+						}
+					}//첨부파일 체크 if end
+					result = ServiceResult.OK;
+					session.commit();
+				}else {
+					result = ServiceResult.FAILED;
+				}
 			}else {
-				result = ServiceResult.FAILED;
+				result = ServiceResult.INVALIDPASSWORD;
 			}
-		}else {
-			result = ServiceResult.INVALIDPASSWORD;
+			return result;
 		}
-		return result;
 	}
 
 	@Override

@@ -96,8 +96,16 @@
   	<servlet-name>FrontController</servlet-name>
   	<servlet-class>kr.or.ddit.mvc.FrontController</servlet-class>
   	<init-param>
-		<param-name>mappingInfo</param-name>
-		<param-value>kr.or.ddit.URIHandlerMapping</param-value>
+		<param-name>basePackage</param-name>
+		<param-value>kr.or.ddit</param-value>
+  	</init-param>
+  	<init-param>
+		<param-name>prefix</param-name>
+		<param-value>/WEB-INF/views/</param-value>
+  	</init-param>
+  	<init-param>
+  		<param-name>suffix</param-name>
+  		<param-value>.jsp</param-value>
   	</init-param>
   	<load-on-startup>0</load-on-startup>
   </servlet>

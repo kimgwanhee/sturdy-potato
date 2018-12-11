@@ -25,33 +25,24 @@ import kr.or.ddit.ServiceResult;
 import kr.or.ddit.board.service.BoardServiceImpl;
 import kr.or.ddit.board.service.IBoardService;
 import kr.or.ddit.filter.wrapper.FileUploadRequestWrapper;
-import kr.or.ddit.mvc.ICommandHandler;
+import kr.or.ddit.mvc.annotation.CommandHandler;
+import kr.or.ddit.mvc.annotation.URIMapping;
+import kr.or.ddit.mvc.annotation.URIMapping.HttpMethod;
 import kr.or.ddit.validator.GeneralValidator;
 import kr.or.ddit.validator.InsertGroup;
 import kr.or.ddit.vo.BoardVO;
 import kr.or.ddit.vo.PdsVO;
 
-public class BoardInsertController implements ICommandHandler {
-	@Override
-	public String Process(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
-
-		String method = req.getMethod();
-		String view = null;
-		if ("get".equalsIgnoreCase(method)) {
-			view = doGet(req, resp);// 논리적이 뷰 네임
-		} else if ("post".equalsIgnoreCase(method)) {
-			view = doPost(req, resp);
-		} else {
-			resp.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
-			return null;
-		}
-		return view;
-	}
-
+@CommandHandler
+public class BoardInsertController {
+	
+	
+	@URIMapping(value="/board/boardInsert.do", method=HttpMethod.GET)
 	public String doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
 		return "board/boardForm";
 	}
 
+	@URIMapping(value="/board/boardInsert.do", method=HttpMethod.POST)
 	public String doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
 		req.setCharacterEncoding("UTF-8");
 		// 1. V.L : board/boardForm
@@ -75,7 +66,9 @@ public class BoardInsertController implements ICommandHandler {
 		if (valid) {
 			if (req instanceof FileUploadRequestWrapper) {
 				List<FileItem> fileitems = ((FileUploadRequestWrapper) req).getFileItems("bo_file");
-				board.setItemList(fileitems);
+				if(fileitems != null) {
+					board.setItemList(fileitems);
+				}
 			}
 			IBoardService service = new BoardServiceImpl();
 			ServiceResult result = service.createBoard(board);

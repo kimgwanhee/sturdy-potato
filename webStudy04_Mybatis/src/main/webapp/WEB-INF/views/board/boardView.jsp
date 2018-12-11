@@ -28,16 +28,43 @@
 	}
 	
 	$(function(){
+		$('#rcmdBtn').on('click', function(){
+			$.ajax({//주소(URL), 메서드, 파라미터(데이타), 내가응답데이타는 어떤형식으로 받을수있는지(html json..등의 데이타타입)가 필요..
+				url : "${pageContext.request.contextPath}/board/boardRecommand.do",
+				data : {
+					bo_no : ${board.bo_no}
+				},
+				dataType : "JSON",
+				//응답
+				success : function(resp) {//처리에 성공했을때..
+					if(resp.message){
+						alert("추천해주셔서 감사합니다.");
+						var recommand = $('#recommand').text();
+						var rcmd = (parseInt(recommand)+1);
+						$('#recommand').text(rcmd);
+					}else{
+						alert("실패");
+					}
+				}
+			});
+		});
+		
 		$('#delbtn').on('click', function(){
 			var check = confirm("정말 삭제하시겠습니까?");
 			if(check){
 				var pass = prompt("비밀번호 입력");
+// 				document.delForm.bo_pass.value=bo_pass;
+// 				document.delForm.submit();
+// 				이렇게 짜면 -> gui이벤트가 발생 x 폼아래 jquery 그 핸들러가 동작하지않는다..
 				$('[name="bo_pass"]').val(pass);
 				$('[name="delForm"]').submit();
-				
 			}
 		});
 	});
+	<c:if test="${not empty message}">
+		alert("${message}");
+		<c:remove var="message" scope="session"/>
+	</c:if>
 	
 </script>
 </head>
@@ -107,7 +134,7 @@
 				</tr>
 				<tr>
 					<th>BO_RCMD</th>
-					<td>${board.bo_rcmd}</td>
+					<td id="recommand">${board.bo_rcmd}</td>
 				</tr>
 				<tr>
 					<td colspan="2">
@@ -115,7 +142,13 @@
 						<c:param name="what" value="${board.bo_no }" />
 					</c:url>
 						<input type="button" value="수정" onclick="location.href='${updateURL}'"/>
-						<input type="button" value="삭제" id="delbtn"/>
+						<input type="button" value="삭제" id="delbtn" />
+						<c:url value="/board/boardInsert.do" var="insertURL">
+							<c:param name="parent" value="${board.bo_no }"></c:param>
+						</c:url>
+						<input type="button" value="답글쓰기" onclick="location.href='${insertURL}'"/>
+						<input type="button" value="추천" id="rcmdBtn"/>
+						
 					</td>
 				</tr>
 			</tbody>
@@ -171,6 +204,7 @@
 					<td colspan="2">
 						<input type="button" value="뒤로" onclick="history.back();" /> 
 						<input type="reset" value="취소" /> 
+					</td>
 				</tr>
 			</tfoot>
 		</table>

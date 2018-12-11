@@ -50,6 +50,11 @@ public class URIMappingCondition {//이뮤터블..?객체???? -> 수정불가
 			return false;
 		return true;
 	}
+
+	@Override
+	public String toString() {
+		return "URIMappingCondition [url=" + url + ", method=" + method + "]";
+	}
 	
 	
 	

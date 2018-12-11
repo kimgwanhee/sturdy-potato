@@ -10,15 +10,17 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import kr.or.ddit.mvc.ICommandHandler;
+import kr.or.ddit.mvc.annotation.CommandHandler;
+import kr.or.ddit.mvc.annotation.URIMapping;
 import kr.or.ddit.prod.dao.IOtherDAO;
 import kr.or.ddit.prod.dao.OtherDAOImpl;
 import kr.or.ddit.vo.BuyerVO;
 import kr.or.ddit.web.calculate.Mime;
 
-public class AjaxBuyerListController implements ICommandHandler {
+@CommandHandler
+public class AjaxBuyerListController {
 
-	@Override
+	@URIMapping("/prod/getBuyerList.do")
 	public String Process(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
 		String prod_lgu = req.getParameter("prod_lgu");
 		

@@ -20,6 +20,8 @@ import lombok.NoArgsConstructor;
 public class BoardVO implements Serializable{
 	
 	private Long bo_no;
+	private Integer bo_level;
+	private Long bo_parent;
 	private String bo_writer;
 	private String bo_pass;
 	private String bo_ip;

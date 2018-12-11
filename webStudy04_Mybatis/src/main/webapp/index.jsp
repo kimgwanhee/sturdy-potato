@@ -66,7 +66,7 @@
 				if (authMember!=null) {
 				%>
 				<a href="${pageContext.request.contextPath }/member/mypage.do"><%=authMember.getMem_name()%></a>님(<%=authMember.getMem_auth() %>) 로그인상태, 
-				<a	href="${pageContext.request.contextPath }/login/logout.jsp">로그아웃</a>
+				<a	href="${pageContext.request.contextPath }/login/logout.do">로그아웃</a>
 				<%
 					} else {
 				%>

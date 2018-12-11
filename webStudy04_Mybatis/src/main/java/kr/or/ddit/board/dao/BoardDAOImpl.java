@@ -54,14 +54,27 @@ public class BoardDAOImpl implements IBoardDAO {
 
 	@Override
 	public void incrementHit(long bo_no) {
-		// TODO Auto-generated method stub
-
+		try(
+				SqlSession session =  sqlSessionFactory.openSession();
+		){
+				IBoardDAO mapper = session.getMapper(IBoardDAO.class);
+				mapper.incrementHit(bo_no);
+				session.commit();
+		}
 	}
 
 	@Override
-	public void incrementRcmd(long bo_no) {
-		// TODO Auto-generated method stub
-
+	public int incrementRcmd(long bo_no) {
+		try(
+			SqlSession session = sqlSessionFactory.openSession();
+		){
+			IBoardDAO mapper = session.getMapper(IBoardDAO.class);
+			int rowCnt = (int) mapper.incrementRcmd(bo_no);
+			if(rowCnt >0) {
+				session.commit();
+			}
+			return rowCnt;
+		}
 	}
 
 	@Override

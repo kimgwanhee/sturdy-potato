@@ -15,13 +15,16 @@ import org.apache.commons.lang3.StringUtils;
 
 import kr.or.ddit.board.service.BoardServiceImpl;
 import kr.or.ddit.board.service.IBoardService;
-import kr.or.ddit.mvc.ICommandHandler;
+import kr.or.ddit.mvc.annotation.CommandHandler;
+import kr.or.ddit.mvc.annotation.URIMapping;
+import kr.or.ddit.mvc.annotation.URIMapping.HttpMethod;
 import kr.or.ddit.vo.PdsVO;
 import kr.or.ddit.web.calculate.Mime;
 
-public class DownloadController implements ICommandHandler {
+@CommandHandler
+public class DownloadController {
 
-	@Override
+	@URIMapping(value="/board/download.do", method=HttpMethod.POST)
 	public String Process(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
 		//파라미터 다운받을거 잡기
 		String pdsnoStr = req.getParameter("what");

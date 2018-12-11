@@ -19,55 +19,35 @@ import kr.or.ddit.ServiceResult;
 import kr.or.ddit.board.service.BoardServiceImpl;
 import kr.or.ddit.board.service.IBoardService;
 import kr.or.ddit.filter.wrapper.FileUploadRequestWrapper;
-import kr.or.ddit.mvc.ICommandHandler;
+import kr.or.ddit.mvc.annotation.CommandHandler;
+import kr.or.ddit.mvc.annotation.URIMapping;
+import kr.or.ddit.mvc.annotation.URIMapping.HttpMethod;
 import kr.or.ddit.validator.GeneralValidator;
 import kr.or.ddit.validator.InsertGroup;
 import kr.or.ddit.vo.BoardVO;
 
-public class BoardUpdateController implements ICommandHandler {
+@CommandHandler
+public class BoardUpdateController {
+	IBoardService service = new BoardServiceImpl();
 
-	@Override
-	public String Process(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
-		String method = req.getMethod();
-		String view = null;
-
-		// 메소드가 뭔지 판단 get이면-> 양식제공
-
-		// 신규등록과 수정양식의 차이점은 기존의데이타를 초기값으로 셋팅하고 수정해야함
-
-		// 1. v.l : "board/boardForm"
-		// 2. 기존 첨부파일이 있다면, 삭제 가능하도록.
-		// 3. 새로운 첨부파일이 있다면, 업로드//기존첨부파일위치랑 같은 위치..
-		if ("get".equalsIgnoreCase(method)) {
-			view = doGet(req, resp);
-		} else if ("post".equalsIgnoreCase(method)) {
-			view = doPost(req, resp);
-		} else {
-
-		}
-		return view;
-
-	}
-
-	public String doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
+	@URIMapping("/board/boardUpdate.do")
+	public String getProcess(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
 		String bonoStr = req.getParameter("what");
 		if (!StringUtils.isNumeric(bonoStr)) {
 			resp.sendError(HttpServletResponse.SC_BAD_REQUEST);
 			return null;
 		}
-		IBoardService service = new BoardServiceImpl();
 		BoardVO board = service.retriveBoard(Long.parseLong(bonoStr));
 		req.setAttribute("board", board);
 		
 		return "board/boardForm";
 	}
 
-	public String doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
-		req.setCharacterEncoding("UTF-8");
+	@URIMapping(value="/board/boardUpdate.do", method=HttpMethod.POST )
+	public String doPost(HttpServletRequest req, HttpServletResponse resp) {
 
 		BoardVO board = new BoardVO();
 		req.setAttribute("board", board);
-
 		try {
 			BeanUtils.populate(board, req.getParameterMap());
 		} catch (IllegalAccessException | InvocationTargetException e) {
@@ -89,7 +69,6 @@ public class BoardUpdateController implements ICommandHandler {
 					board.setItemList(fileitems);
 				}
 			}
-			IBoardService service = new BoardServiceImpl();
 			ServiceResult result = service.modifyBoard(board);
 			switch (result) {
 			case OK:

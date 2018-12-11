@@ -54,14 +54,16 @@ public interface IBoardDAO {
 	/**
 	 * 글 조회수 증가
 	 * @param bo_no
+	 * @return 
 	 */
 	public void incrementHit(long bo_no);
 	
 	/**
 	 * 글 추천수 증가
 	 * @param bo_no
+	 * @return 
 	 */
-	public void incrementRcmd(long bo_no);
+	public int incrementRcmd(long bo_no);
 	
 	/**
 	 * 글 수정
