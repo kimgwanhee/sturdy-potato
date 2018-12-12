@@ -51,9 +51,10 @@
 		   $("[name='page']").val("");
 		}
 </script>
-<c:url value="/board/boardView.do" var="boardURL"></c:url>
-<script type="text/javascript">
 
+<c:url value="/board/boardView.do" var="boardURL"></c:url>
+
+<script type="text/javascript">
 $(function(){
 	var searchForm = $('[name="searchForm"]');
 	$(window).on("popstate", function(event){

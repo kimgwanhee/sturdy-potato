@@ -1,157 +1,169 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd" version="3.0">
   <display-name>webStudy03_Maven</display-name>
- <welcome-file-list>
+  <welcome-file-list>
     <welcome-file>index.jsp</welcome-file>
   </welcome-file-list>
   <context-param>
-  	<param-name>param1</param-name>
-  	<param-value>paramValue1</param-value>
+    <param-name>param1</param-name>
+    <param-value>paramValue1</param-value>
   </context-param>
   <context-param>
-  	<param-name>contentFolder</param-name>
-  	<param-value>d:/contents</param-value>
+    <param-name>contentFolder</param-name>
+    <param-value>d:/contents</param-value>
   </context-param>
-  
+  <listener>
+    <listener-class>kr.or.ddit.listener.CustomServletContextListener</listener-class>
+  </listener>
+  <listener>
+    <listener-class>kr.or.ddit.listener.CustomHttpSessionListener</listener-class>
+  </listener>
+  <listener>
+    <listener-class>kr.or.ddit.listener.CustomHttpSessionAttributeListener</listener-class>
+  </listener>
   <filter>
-  	<filter-name>CharacterEncodingFilter</filter-name>
-  	<filter-class>kr.or.ddit.filter.CharacterEncodingFilter</filter-class>
-  	<init-param>
-  		<param-name>encoding</param-name>
-  		<param-value>UTF-8</param-value>
-  	</init-param>
+    <filter-name>CharacterEncodingFilter</filter-name>
+    <filter-class>kr.or.ddit.filter.CharacterEncodingFilter</filter-class>
+    <init-param>
+      <param-name>encoding</param-name>
+      <param-value>UTF-8</param-value>
+    </init-param>
   </filter>
   <filter-mapping>
-  	<filter-name>CharacterEncodingFilter</filter-name>
-  	<url-pattern>/*</url-pattern>
+    <filter-name>CharacterEncodingFilter</filter-name>
+    <url-pattern>/*</url-pattern>
   </filter-mapping>
-  
   <filter>
-  	<filter-name>AuthenticationFilter</filter-name>
-  	<filter-class>kr.or.ddit.filter.auth.AuthenticationFilter</filter-class>
-  	<init-param>
-  		<param-name>securedResourcesInfo</param-name>
-  		<param-value>kr.or.ddit.auth.securedResources</param-value>
-  	</init-param>
+    <filter-name>AuthenticationFilter</filter-name>
+    <filter-class>kr.or.ddit.filter.auth.AuthenticationFilter</filter-class>
+    <init-param>
+      <param-name>securedResourcesInfo</param-name>
+      <param-value>kr.or.ddit.auth.securedResources</param-value>
+    </init-param>
   </filter>
   <filter-mapping>
-  	<filter-name>AuthenticationFilter</filter-name>
-  	<url-pattern>/*</url-pattern>
+    <filter-name>AuthenticationFilter</filter-name>
+    <url-pattern>/*</url-pattern>
   </filter-mapping>
-  
   <filter>
-  	<filter-name>AuthorizationFilter</filter-name>
-  	<filter-class>kr.or.ddit.filter.auth.AuthorizationFilter</filter-class>
+    <filter-name>AuthorizationFilter</filter-name>
+    <filter-class>kr.or.ddit.filter.auth.AuthorizationFilter</filter-class>
   </filter>
   <filter-mapping>
-  	<filter-name>AuthorizationFilter</filter-name>
-  	<url-pattern>/*</url-pattern>
+    <filter-name>AuthorizationFilter</filter-name>
+    <url-pattern>/*</url-pattern>
   </filter-mapping>
-  
   <filter>
-  	<filter-name>FileUploadCheckFilter</filter-name>
-  	<filter-class>kr.or.ddit.filter.FileUploadCheckFilter</filter-class>
+    <filter-name>FileUploadCheckFilter</filter-name>
+    <filter-class>kr.or.ddit.filter.FileUploadCheckFilter</filter-class>
   </filter>
   <filter-mapping>
-  	<filter-name>FileUploadCheckFilter</filter-name>
-  	<url-pattern>*.do</url-pattern>
+    <filter-name>FileUploadCheckFilter</filter-name>
+    <url-pattern>*.do</url-pattern>
   </filter-mapping>
-  
   <servlet>
     <servlet-name>DescriptionServlet</servlet-name>
-    <servlet-class>kr.or.ddit.web.DescriptionServlet</servlet-class> 
+    <servlet-class>kr.or.ddit.web.DescriptionServlet</servlet-class>
     <init-param>
-    	<param-name>testParam</param-name>
-    	<param-value>testParamValue</param-value>
+      <param-name>testParam</param-name>
+      <param-value>testParamValue</param-value>
     </init-param>
   </servlet>
-  
   <servlet-mapping>
     <servlet-name>DescriptionServlet</servlet-name>
     <url-pattern>/desc</url-pattern>
   </servlet-mapping>
-  
   <servlet>
-  	<servlet-name>ImagesFormServlet</servlet-name>
-  	<servlet-class>kr.or.ddit.web.ImagesFormServlet</servlet-class>
+    <servlet-name>ImagesFormServlet</servlet-name>
+    <servlet-class>kr.or.ddit.web.ImagesFormServlet</servlet-class>
   </servlet>
-  
   <servlet-mapping>
-  	<servlet-name>ImagesFormServlet</servlet-name>
-  	<url-pattern>/imageForm</url-pattern>
+    <servlet-name>ImagesFormServlet</servlet-name>
+    <url-pattern>/imageForm</url-pattern>
   </servlet-mapping>
-  
   <servlet>
-  	<servlet-name>CalculateServlet</servlet-name>
-  	<servlet-class>kr.or.ddit.web.CalculateServlet</servlet-class>
-  	<load-on-startup>1</load-on-startup>
+    <servlet-name>CalculateServlet</servlet-name>
+    <servlet-class>kr.or.ddit.web.CalculateServlet</servlet-class>
+    <load-on-startup>1</load-on-startup>
   </servlet>
-  
   <servlet-mapping>
-  	<servlet-name>CalculateServlet</servlet-name>
-  	<url-pattern>/calculate</url-pattern>
+    <servlet-name>CalculateServlet</servlet-name>
+    <url-pattern>/calculate</url-pattern>
   </servlet-mapping>
-  
   <servlet>
-  	<servlet-name>FrontController</servlet-name>
-  	<servlet-class>kr.or.ddit.mvc.FrontController</servlet-class>
-  	<init-param>
-		<param-name>basePackage</param-name>
-		<param-value>kr.or.ddit</param-value>
-  	</init-param>
-  	<init-param>
-		<param-name>prefix</param-name>
-		<param-value>/WEB-INF/views/</param-value>
-  	</init-param>
-  	<init-param>
-  		<param-name>suffix</param-name>
-  		<param-value>.jsp</param-value>
-  	</init-param>
-  	<load-on-startup>0</load-on-startup>
+    <servlet-name>FrontController</servlet-name>
+    <servlet-class>kr.or.ddit.mvc.FrontController</servlet-class>
+    <init-param>
+      <param-name>basePackage</param-name>
+      <param-value>kr.or.ddit</param-value>
+    </init-param>
+    <init-param>
+      <param-name>prefix</param-name>
+      <param-value>/WEB-INF/views/</param-value>
+    </init-param>
+    <init-param>
+      <param-name>suffix</param-name>
+      <param-value>.jsp</param-value>
+    </init-param>
+    <load-on-startup>0</load-on-startup>
   </servlet>
-  
   <servlet-mapping>
-  	<servlet-name>FrontController</servlet-name>
-  	<url-pattern>*.do</url-pattern>
+    <servlet-name>FrontController</servlet-name>
+    <url-pattern>*.do</url-pattern>
   </servlet-mapping>
-  
   <servlet>
-  	<servlet-name>MusicLyricsServlet</servlet-name>
-  	<servlet-class>kr.or.ddit.web.MusicLyricsServlet</servlet-class>
+    <servlet-name>MusicLyricsServlet</servlet-name>
+    <servlet-class>kr.or.ddit.web.MusicLyricsServlet</servlet-class>
   </servlet>
-  
   <servlet-mapping>
-  	<servlet-name>MusicLyricsServlet</servlet-name>
-  	<url-pattern>/musicForm</url-pattern>
+    <servlet-name>MusicLyricsServlet</servlet-name>
+    <url-pattern>/musicForm</url-pattern>
   </servlet-mapping>
-  
-   <servlet>
-  	<servlet-name>FileUploadServlet_3_0</servlet-name>
-  	<servlet-class>kr.or.ddit.web.upload.FileUploadServlet_3_0</servlet-class>
-	<multipart-config>
-		<location>D:/temp</location>
-		<max-file-size>10240000</max-file-size>
-		<max-request-size>102400000</max-request-size>
-		<file-size-threshold>10000</file-size-threshold>
-	</multipart-config>  	
+  <servlet>
+    <servlet-name>FileUploadServlet_3_0</servlet-name>
+    <servlet-class>kr.or.ddit.web.upload.FileUploadServlet_3_0</servlet-class>
+    <multipart-config>
+      <location>D:/temp</location>
+      <max-file-size>10240000</max-file-size>
+      <max-request-size>102400000</max-request-size>
+      <file-size-threshold>10000</file-size-threshold>
+    </multipart-config>
   </servlet>
-  
   <servlet-mapping>
-  	<servlet-name>FileUploadServlet_3_0</servlet-name>
-  	<url-pattern>/upload_3</url-pattern>
+    <servlet-name>FileUploadServlet_3_0</servlet-name>
+    <url-pattern>/upload_3</url-pattern>
   </servlet-mapping>
-  
-   <servlet>
-  	<servlet-name>FileUploadServlet_2_5</servlet-name>
-  	<servlet-class>kr.or.ddit.web.upload.FileUploadServlet_2_5</servlet-class>
+  <servlet>
+    <servlet-name>FileUploadServlet_2_5</servlet-name>
+    <servlet-class>kr.or.ddit.web.upload.FileUploadServlet_2_5</servlet-class>
   </servlet>
-  
   <servlet-mapping>
-  	<servlet-name>FileUploadServlet_2_5</servlet-name>
-  	<url-pattern>/upload_2</url-pattern>
+    <servlet-name>FileUploadServlet_2_5</servlet-name>
+    <url-pattern>/upload_2</url-pattern>
   </servlet-mapping>
-  
   <session-config>
-  	<session-timeout>30</session-timeout>
+    <session-timeout>30</session-timeout>
   </session-config>
+  
+  <error-page>
+  	<error-code>500</error-code>
+  	<location>/error/err500.jsp</location>
+  </error-page>
+  <error-page>
+  	<error-code>404</error-code>
+  	<location>/error/err404.jsp</location>
+  </error-page>
+  <error-page>
+  	<error-code>400</error-code>
+  	<location>/error/err400.jsp</location>
+  </error-page>
+  <error-page>
+  	<error-code>401</error-code>
+  	<location>/error/err401.jsp</location>
+  </error-page>
+  <error-page>
+  	<exception-type>kr.or.ddit.board.BoardException</exception-type>
+  	<location>/error/boardException.jsp</location>
+  </error-page>
+  
 </web-app>

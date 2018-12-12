@@ -1,6 +1,5 @@
 package kr.or.ddit.web.calculate;
 
-import com.oracle.jrockit.jfr.ContentType;
 
 public enum Mime {
 	PLAIN("text/plain;charset=UTF-8"),
@@ -11,7 +10,7 @@ public enum Mime {
 	
 
 	//상수값을 얻어올수 있는 변수선언
-	public String contentType;
+	private String contentType;
 	
 	//밖에서 불러다 쓸..메서드
 	public String getContentType() {

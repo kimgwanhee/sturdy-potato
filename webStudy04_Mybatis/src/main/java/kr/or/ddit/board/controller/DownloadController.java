@@ -34,7 +34,7 @@ public class DownloadController {
 			return null;
 		}
 	     //서비스에서 pds객체 받아오기
-	      IBoardService service = new BoardServiceImpl();
+		IBoardService service = new BoardServiceImpl();
 	      //pds 번호에 해당하는 pds객체 가져오기
 	      PdsVO pds =  service.downloadPds(Long.parseLong(pdsnoStr));
 	      

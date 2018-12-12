@@ -26,7 +26,7 @@ import kr.or.ddit.web.calculate.Mime;
 
 @CommandHandler
 public class BoardViewController{
-	IBoardService service = new BoardServiceImpl();
+	IBoardService service = new BoardServiceImpl();	
 	IBoardDAO boardDao = new BoardDAOImpl();
 
 	@URIMapping("/board/boardView.do")

@@ -55,7 +55,7 @@ public class BuyerListController{
 		//application/json, text/javascript, */*; q=0.01
 		if(StringUtils.containsIgnoreCase(accept, "json")) {
 			//JSON
-			resp.setContentType(Mime.JSON.contentType);
+			resp.setContentType(Mime.JSON.getContentType());
 			ObjectMapper mapper = new ObjectMapper();
 			//자바를 json으로 바꾸려면 마샬링
 			
